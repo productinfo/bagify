@@ -1,13 +1,63 @@
-from django.test import TestCase, Client, SimpleTestCase
+from django.test import TestCase, Client, SimpleTestCase, LiveServerTestCase
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
+import os
 
 
 # Create your tests here.
 
-class IndexPage(unittest.TestCase):
+class PagesUpTestCase(unittest.TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_pages_is_up(self):
+    def test_index_is_up(self):
+        """Tests if the index page is up"""
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
+
+    def test_register_is_up(self):
+        """Tests if the registration page is up"""
+        response = self.client.get('/register/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_is_up(self):
+        """Tests if login page is up"""
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+
+
+class AccountTestCase(LiveServerTestCase):
+    def setUp(self):
+        self.selenium = webdriver.Firefox()
+        super(AccountTestCase, self).setUp()
+
+    def tearDown(self):
+        self.selenium.quit()
+        super(AccountTestCase, self).tearDown()
+
+    def test_register_new_user(self):
+        selenium = self.selenium;
+        selenium.get('http://127.0.0.1:8000/register/')
+
+        first_name = selenium.find_element_by_id('id_first_name')
+        last_name = selenium.find_element_by_id('id_last_name')
+        username = selenium.find_element_by_id('id_username')
+        email = selenium.find_element_by_id('id_email')
+        password1 = selenium.find_element_by_id('id_password1')
+        password2 = selenium.find_element_by_id('id_password2')
+
+        submit = selenium.find_element_by_name('register')
+
+        #Fill the form with data
+        first_name.send_keys('Yusuf')
+        last_name.send_keys('Unary')
+        username.send_keys('unary')
+        email.send_keys('joaogabriel.s.o@hotmail.com')
+        password1.send_keys('P4$$W0RD69')
+        password2.send_keys('P4$$W0RD69')
+
+        #submitting the formQ
+        submit.send_keys(Keys.RETURN)
+
+        assert 'Check your email' in selenium.page_source
