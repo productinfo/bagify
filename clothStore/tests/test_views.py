@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import os
+import random
 
 
 # Create your tests here.
@@ -40,24 +41,27 @@ class AccountTestCase(LiveServerTestCase):
         selenium = self.selenium;
         selenium.get('http://127.0.0.1:8000/register/')
 
-        first_name = selenium.find_element_by_id('id_first_name')
-        last_name = selenium.find_element_by_id('id_last_name')
+        # first_name = selenium.find_element_by_id('id_first_name')
+        # last_name = selenium.find_element_by_id('id_last_name')
+
+        user = 'user' + str(random.randint(1,10000))
+
         username = selenium.find_element_by_id('id_username')
         email = selenium.find_element_by_id('id_email')
         password1 = selenium.find_element_by_id('id_password1')
         password2 = selenium.find_element_by_id('id_password2')
 
-        submit = selenium.find_element_by_name('register')
+        submit = selenium.find_element_by_id('register-button')
 
         #Fill the form with data
-        first_name.send_keys('Yusuf')
-        last_name.send_keys('Unary')
-        username.send_keys('unary')
+        # first_name.send_keys('Jobalda')
+        # last_name.send_keys('Unary')
+        username.send_keys(user)
         email.send_keys('joaogabriel.s.o@hotmail.com')
-        password1.send_keys('P4$$W0RD69')
-        password2.send_keys('P4$$W0RD69')
+        password1.send_keys('P4$$W0RD69k')
+        password2.send_keys('P4$$W0RD69k')
 
-        #submitting the formQ
+        #submitting the form
         submit.send_keys(Keys.RETURN)
 
-        assert 'Check your email' in selenium.page_source
+        assert 'Check your email'

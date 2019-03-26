@@ -1,1 +1,59 @@
-<h1>Hey, you, good looking! Have you just registered to the most awesome website? Yeah you did! Now you can activated your account</h1>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <style media="screen">
+            body {
+                font-family: 'Avenir', sans-serif;
+                font-size: 1.5em;
+            }
+            .jumbotron p {
+                font-size: 4rem;
+                text-weigth: 200;
+            }
+            main {
+                background: whitesmoke;
+            }
+            footer {
+                margin-top: 50px;
+            }
+
+            @media screen and (max-width: 450px) {
+                body {
+                    font-size: 1rem;
+                }
+                .jumbotron p {
+                    font-size: 3rem;
+                }
+                footer img {
+                    width: 100px;
+                }
+            }
+        </style>
+    </head>
+    <body class="bg-light">
+        <header class="jumbotron m-0 bg-light">
+            <div class="text-center">
+                <img src="https://cdn1.iconfinder.com/data/icons/patterned-backpacks/100/bp_9-01-512.png" width="150" alt="" class="d-inline-block mr-auto">
+                <p class="mt-2">Welcome to <strong>Bagify</strong>!</p>
+            </div>
+        </header>
+        <main class="container my-4 p-5">
+            <p>We are glad to have you on board!</p>
+            <a href="#" class="btn btn-primary d-block p-3 my-3">ACTIVATE YOUR ACCOUNT</a>
+            <p>Happy shopping.</p>
+            <small>If you did <span class="bg-danger">not</span> registered an account on Bagify please ignore this message.</small>
+        </main>
+        <footer class="d-flex flex-row justify-content-center mb-3">
+            <div class="mx-3">
+                <img src="https://image.flaticon.com/icons/svg/701/701360.svg" width="150" class="d-block" alt="">
+            </div>
+            <div class="mx-3">
+                <p>CS50's Web Programming <span class="d-none d-sm-block">with Python and Javascript</span></p>
+                <p>Project by Joao Schapke</p>
+            </div>
+        </footer>
+    </body>
+</html>
