@@ -1,10 +1,12 @@
 from django.test import TestCase, Client, SimpleTestCase, LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 import os
 import random
-
+from django.contrib.auth.models import User
 
 # Create your tests here.
 
@@ -28,10 +30,11 @@ class PagesUpTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class AccountTestCase(LiveServerTestCase):
+class AccountTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        self.selenium = webdriver.Firefox()
         super(AccountTestCase, self).setUp()
+        # self.selenium = webdriver.Firefox()
+        self.selenium = WebDriver()
 
     def tearDown(self):
         self.selenium.quit()
@@ -39,7 +42,7 @@ class AccountTestCase(LiveServerTestCase):
 
     def test_register_new_user(self):
         selenium = self.selenium;
-        selenium.get('http://127.0.0.1:8000/register/')
+        selenium.get('%s%s' % (self.live_server_url, '/register/'))
 
         # first_name = selenium.find_element_by_id('id_first_name')
         # last_name = selenium.find_element_by_id('id_last_name')
@@ -57,11 +60,28 @@ class AccountTestCase(LiveServerTestCase):
         # first_name.send_keys('Jobalda')
         # last_name.send_keys('Unary')
         username.send_keys(user)
-        email.send_keys('joaogabriel.s.o@hotmail.com')
-        password1.send_keys('P4$$W0RD69k')
-        password2.send_keys('P4$$W0RD69k')
+        email.send_keys(os.getenv('TESTING_EMAIL'))
+        password1.send_keys('P4$$W0RD6k')
+        password2.send_keys('P4$$W0RD6k')
 
         #submitting the form
-        submit.send_keys(Keys.RETURN)
+        submit.click()
+        self.assertEqual(selenium.current_url, '%s%s' % (self.live_server_url, '/register/complete/'))
 
-        assert 'Check your email'
+    def test_login_user(self):
+        username = 'usernamexTest'
+        password= 'P4ssW0rdk0l'
+
+        user = User.objects.create_user(username, 'test@mail.com', password)
+        selenium = self.selenium;
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        usernameField= selenium.find_element_by_id('id_username')
+        passwordField = selenium.find_element_by_id('id_password')
+        submit = selenium.find_element_by_id('submit')
+
+        usernameField.send_keys(username)
+        passwordField.send_keys(password)
+
+        submit.click()
+        self.assertEqual(selenium.current_url, '%s%s' % (self.live_server_url, '/'))

@@ -1,0 +1,57 @@
+// .navbar{
+//     position: fixed;
+//     width: 100%;
+//     opacity: .85;
+//     z-index:10;
+// }
+
+#carousel img {
+    object-fit: cover;
+    width: 100%;
+    max-height: 550px;
+    overflow-y: hidden;
+    z-index:0;
+}
+
+.best-sellers {
+    .scrolling-wrapper {
+        max-height: 300px;
+        // max-height: 300px;
+        width: 100%;
+        overflow-x: scroll;
+        // overflow-y: hidden;
+        white-space: nowrap;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+          display: none;
+      }
+
+      .card {
+          height: 100%;
+          width: 40%;
+          max-width: 200px;
+          min-width: 150px;
+          margin-left: 20px;
+          object-fit: cover;
+          word-wrap: break-word;
+          display: inline-block;
+          // overflow-x: hidden;
+          img {
+              object-fit: cover;
+          }
+      }
+    }
+
+    .arrow {
+        position: relative;
+        bottom: 115px;
+        margin: 5px;
+    }
+}
+
+.company-details {
+    text-align: center;
+    background: whitesmoke
+}

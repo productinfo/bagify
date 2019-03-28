@@ -1,11 +1,11 @@
-{% extends 'cloth_store/base.html'%}
+{% extends 'cloth_store/base.html' %}
 
 {% block content %}
 <h3>Login</h3>
 <form method="post">
     {% csrf_token %}
     {{form.as_p}}
-    <button type="submit">Submit</button>
+    <button type="submit" id="submit">Submit</button>
 </form>
 
 <p>Don't have an account? <a href="/register">Register.</a></p>

@@ -1,0 +1,44 @@
+#carousel img {
+  object-fit: cover;
+  width: 100%;
+  max-height: 550px;
+  overflow-y: hidden;
+  z-index: 0;
+}
+
+.best-sellers .scrolling-wrapper {
+  max-height: 300px;
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+}
+.best-sellers .scrolling-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.best-sellers .scrolling-wrapper .card {
+  height: 100%;
+  width: 40%;
+  max-width: 200px;
+  min-width: 150px;
+  margin-left: 20px;
+  object-fit: cover;
+  word-wrap: break-word;
+  display: inline-block;
+}
+.best-sellers .scrolling-wrapper .card img {
+  object-fit: cover;
+}
+.best-sellers .arrow {
+  position: relative;
+  bottom: 115px;
+  margin: 5px;
+}
+
+.company-details {
+  text-align: center;
+  background: whitesmoke;
+}
+
+/*# sourceMappingURL=index.css.map */

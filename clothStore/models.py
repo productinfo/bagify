@@ -1,12 +1,14 @@
 from django.db import models
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
-
+from django.contrib.auth.models import User
 import json
 # Create your models here.
 
 class CarouselImage(models.Model):
     image = models.ImageField(upload_to="carousel_images/")
+    title = models.CharField(max_length=50)
+    subtitle = models.CharField(max_length=300, null=True, blank=True)
     item = models.ForeignKey('Item', related_name='carousel', on_delete=models.CASCADE, null=True, blank=True)
     url = models.CharField(max_length=800, null=True, blank=True)
 
@@ -17,6 +19,7 @@ class Image(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="categories_images/")
 
 class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
@@ -24,6 +27,20 @@ class Order(models.Model):
     items = models.TextField()
     address = models.TextField()
     total = models.DecimalField(decimal_places=2, max_digits=9)
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    cart = models.TextField(null=True)
+
+    def addItem(self, itemId):
+        current = json.loads(self.cart)
+        current.push[item]
+        self.cart = json.dumps(current)
+
+    def getList(self):
+        if self.cart:
+            return json.loads(self.cart)
+
 
 class Item(models.Model):
     GENDER_OPTIONS = (
