@@ -28,19 +28,6 @@ class Order(models.Model):
     address = models.TextField()
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
-class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    cart = models.TextField(null=True)
-
-    def addItem(self, itemId):
-        current = json.loads(self.cart)
-        current.push[item]
-        self.cart = json.dumps(current)
-
-    def getList(self):
-        if self.cart:
-            return json.loads(self.cart)
-
 
 class Item(models.Model):
     GENDER_OPTIONS = (
