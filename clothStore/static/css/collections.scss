@@ -1,0 +1,13 @@
+.checkboxes {
+
+}
+
+.checkboxes input:checked + .badge {
+    background-color: black;
+    color: white;
+}
+
+.checkboxes .badge {
+    background-color: white;
+    color: black;
+}

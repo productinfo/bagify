@@ -21,6 +21,9 @@ class Category(models.Model):
     name = models.CharField(max_length=50)
     image = models.ImageField(upload_to="categories_images/")
 
+    def __str__(self):
+        return f'{self.name}'
+
 class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10)

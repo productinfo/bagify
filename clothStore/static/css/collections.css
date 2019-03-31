@@ -1,0 +1,9 @@
+.categories-boxes input {
+    display: none;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+}
+
+
+/*# sourceMappingURL=collections.css.map */

@@ -37,15 +37,58 @@
     <!--/.Controls-->
 </div>
 
-<section class="best-sellers my-5 p-1">
-    <h2 class="text-center my-3"><span>Best Sellers</span> / <span>New Products</span></h2>
-    <div class="scrolling-wrapper dragscroll">
+{% if popular and newest %}
+<section class="items-scroll my-5 p-1">
+    <h2 class="text-center my-3 header">
+        <label>
+            <input type="radio" name="scrollItemsToggler" value="#popularItems" checked>
+            <span>Best Sellers</span>
+        </label> /
+        <label>
+            <input type="radio" name="scrollItemsToggler" value="#newItems">
+            <span>New Products</span>
+        </label>
+    </h2>
+
+    <div class="scrolling-wrapper dragscroll animated collapse" id="popularItems">
         {% for item in popular%}
+        {% if item.main_image%}
       <div class="card">
-          <img src="{{item.main_image.url}}" class="w-100" alt="">
+          <!-- Card content -->
+          <div class="card-body elegant-color white-text rounded-top position-absolute w-100">
+
+              <!-- Social shares button -->
+              <a class="activator waves-effect mr-4"><i class="fas fa-share-alt white-text"></i></a>
+              <!-- Title -->
+              <h4 class="card-title">Card title</h4>
+              <hr class="hr-light">
+              <!-- Link -->
+              <a href="#!" class="white-text d-flex justify-content-end"><h5>Read more <i class="fas fa-angle-double-right"></i></h5></a>
+
+        </div>
+
+        <!-- Card Dark -->
+          <div class="card-image overlay p-0 m-0">
+              <img src="{{item.main_image.url}}" class="w-100" alt="image of product">
+              <!-- <a href="{% url 'product' item.pk %}">
+                  <div class="mask rgba-white-slight"></div>
+              </a> -->
+          </div>
       </div>
+        {% endif %}
         {% endfor %}
     </div>
+
+    <div class="scrolling-wrapper dragscroll animated collapse" id="newItems">
+        {% for item in newest%}
+        {% if item.main_image %}
+      <div class="card">
+          <a href="{% url 'product' item.pk %}"><img src="{{item.main_image.url}}" class="w-100" alt=""></a>
+      </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
     <div class="float-left arrow text-light">
         <i class="fa fa-angle-left fa-2x"></i>
     </div>
@@ -53,8 +96,9 @@
         <i class="fa fa-angle-right fa-2x"></i>
     </div>
 </section>
+{% endif %}
 
-<section class="company-details container p-3">
+<section class="company-details container p-3 my-3">
     <h3>Bagify</h3>
     <p>Bagify is a fictional company of bags</p>
     <p>Here goes some more info of the company.</p>
@@ -63,19 +107,25 @@
     <h4>Every story has a person. Buy our backpacks.</h4>
 </section>
 
-<section class="newest-products my-5 container">
-    <h2 class="text-center">Newest Additions</h2>
-    <div class="row">
+{% if categories %}
+<section class="my-4 container-fluid categories">
+    <h2 class="text-center">Our collections:</h2>
+    <div class="row justify-content-center"">
         {% for category in categories %}
-        <div class="col-6 col-sm-4">
-            <img src="" alt="">
+        <div class="col-6 col-sm-5 col-lg-3 p-0 view zoom">
+            <img class="img-fluid" src="{{ category.image.url }}" alt="image of the category">
+            <a href="/collections/{{category.name}}/"><div class="mask flex-center waves-effect waves-light rgba-black-strong">
+                <h4 class="white-text">{{category.name}}</h4>
+            </div></a>
         </div>
         {% endfor %}
     </div>
 </section>
+{% endif %}
 
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+<script src="{% static 'js/index.js' %}" charset="utf-8"></script>
 {% endblock %}

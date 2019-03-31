@@ -6,31 +6,55 @@
   z-index: 0;
 }
 
-.best-sellers .scrolling-wrapper {
+.items-scroll .header input {
+  display: none;
+}
+.items-scroll .header input + span {
+  opacity: 0.6;
+}
+.items-scroll .header input:checked + span {
+  opacity: 1;
+}
+.items-scroll .header span:hover {
+  opacity: 0.9;
+}
+.items-scroll .scrolling-wrapper {
   max-height: 300px;
   width: 100%;
   overflow-x: scroll;
+  overflow-y: hidden;
   white-space: nowrap;
   padding: 0;
   -webkit-overflow-scrolling: touch;
 }
-.best-sellers .scrolling-wrapper::-webkit-scrollbar {
+.items-scroll .scrolling-wrapper::-webkit-scrollbar {
   display: none;
 }
-.best-sellers .scrolling-wrapper .card {
+.items-scroll .scrolling-wrapper .card {
   height: 100%;
   width: 40%;
   max-width: 200px;
   min-width: 150px;
   margin-left: 20px;
-  object-fit: cover;
   word-wrap: break-word;
   display: inline-block;
 }
-.best-sellers .scrolling-wrapper .card img {
-  object-fit: cover;
+.items-scroll .scrolling-wrapper .card .view.overlay {
+  z-index: 1;
 }
-.best-sellers .arrow {
+.items-scroll .scrolling-wrapper .card .card-image {
+  max-height: 100%;
+}
+.items-scroll .scrolling-wrapper .card .card-image a {
+  max-height: 100%;
+}
+.items-scroll .scrolling-wrapper .card .card-body {
+  opacity: 0.8;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+}
+.items-scroll .arrow {
   position: relative;
   bottom: 115px;
   margin: 5px;
@@ -39,6 +63,18 @@
 .company-details {
   text-align: center;
   background: whitesmoke;
+}
+
+.categories .col-6 {
+  max-height: 200px;
+  overflow: hidden;
+}
+.categories img {
+  object-fit: cover;
+  object-position: center;
+  min-height: 100%;
+  min-width: 100%;
+  max-width: 110%;
 }
 
 /*# sourceMappingURL=index.css.map */

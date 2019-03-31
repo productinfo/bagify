@@ -1,58 +1,65 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from .models import *
 from django.core.cache import cache
+from django.conf import settings
+from .models import *
+from paypal.standard.forms import PayPalPaymentsForm
 # Create your views here.
 
 
+#Home page
 def home(request):
 	carousel = CarouselImage.objects.all()
 	mostPopular = Item.objects.order_by('-sold_units')[:8]
 	newestAdditions = Item.objects.order_by('-id')[:8]
+	categories = Category.objects.all()
 
-	print(mostPopular)
-	return render(request, 'cloth_store/index.html', {'carousel': carousel, 'newest': newestAdditions, 'popular': mostPopular})
+	return render(request, 'cloth_store/index.html', {'carousel': carousel, 'newest': newestAdditions, 'popular': mostPopular, 'categories': categories })
 
+
+#Account Page
 def account(request):
 	return render(request, 'cloth_store/account.html')
 
-def collections(request):
-	categories = Category.objects.all()
+#Categories page
+def collections(request, query = ''):
 
-	return render(request, 'cloth_store/collections.html', {'categories': categories, 'item': item})
+
+	categories = Category.objects.all()
+	return render(request, 'cloth_store/collections.html', {'categories': categories, 'query': query})
+
+
+#Product page
+def product(request, id):
+	product = get_object_or_404(Item, pk=id)
+
+	return render(product, 'cloth_store/product.html', {'product': product})
+
 
 def cart(request):
+	return render(request, 'cloth_store/cart.html')
+
+def checkout(request):
 
 	return render(request, 'cloth_store/cart.html')
 
 
-def indexCache(request):
-	cache_key = 'indexPageData'
-	cache_time = 21600
-	data = cache.get(cache_key)
 
-	if not data:
-		 data.carousel = CarouselImage.objects.all()
-		 data.mostPopular = Item.objects.order_by('-sold_units')[:8]
-		 data.newestAdditions = Item.objects.order_by('-id')[:8]
+def view_that_asks_for_money(request, price, name, unique_id):
 
-	cache.set(cache_key, data, cache_time)
+    # What you want the button to do.
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": price,
+        "item_name": name,
+        "invoice": unique_id,
+        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('payment_done')),
+        "cancel_return": request.build_absolute_uri(reverse('payment_cancelled')),
+    }
 
-	return JsonResponse(data, safe=False)
-
-def addItem(request):
-	if request.method == 'POST':
-		if not request.user.cart:
-			Cart.objects.create(user=request.user)
-
-		request.user.cart.addItem(request.theItemId) # FIXME: Find where in the request will be the item id
-
-def findItems(itemsIds):
-	items = allItems();
-
-	found = []
-	notFound = []
-
-	for item in itemsIds:
-		if item in saf:
-			dsf
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "payment.html", context)

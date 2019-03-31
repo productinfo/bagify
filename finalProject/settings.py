@@ -29,7 +29,7 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
@@ -39,6 +39,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_AUTO_LOGIN = True
+
+PAYPAL_RECEIVER_EMAIL = os.getenv('PAYPAL_EMAIL')
+PAYPAL_TEST = True #Paypal in testing mode
+# PAYPAL_BUY_BUTTON_IMAGE =
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'paypal.standard.ipn',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
