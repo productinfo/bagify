@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.cache import cache
 from django.conf import settings
+
 from .models import *
 from paypal.standard.forms import PayPalPaymentsForm
 # Create your views here.
@@ -25,9 +27,11 @@ def account(request):
 #Categories page
 def collections(request, query = ''):
 
+	categories = Category.objects.all().values()
+	items = Item.objects.all().values()
+	items_json = json.dumps(list(items), cls=DjangoJSONEncoder)
 
-	categories = Category.objects.all()
-	return render(request, 'cloth_store/collections.html', {'categories': categories, 'query': query})
+	return render(request, 'cloth_store/collections.html', {'categories': categories, 'query': query, 'items': items_json})
 
 
 #Product page

@@ -6,82 +6,135 @@ Collections
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/collections.css' %}">
+
 <script type="text/javascript">
-    var data = '{{categories}}';
-    var selected = '{{query}}';
+    var django_data = {{items|safe}};
 </script>
+
 {% verbatim %}
-<script id="entry-template" type="text/x-handlebars-template">
+<script id="catalog-template" type="text/x-handlebars-template">
     <div class="row">
-    {{#list items}}
-        <div class="collection-item col-6 col-sm-4 col-lg-3">
-            <img alt="{{alt}}" src="{{src}}">
-            <h3>{{title}}</h3>
-            <div><button>ADD TO CART</button></div>
+    {{#each items}}
+        <div class="col-lg-4 col-md-6 my-3">
+          <!-- Card -->
+          <div class="card card-cascade card-ecommerce">
+
+            <!-- Card content -->
+            <div class="card-body card-body-cascade text-center">
+              <!-- Category & Title -->
+              <a href="" class="text-muted">
+                <h5>Smartphone</h5>
+              </a>
+              <h4 class="card-title">
+                <strong>
+                  <a href="">{{name}}</a>
+                </strong>
+              </h4>
+              <!-- Description -->
+              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing minima veniam elit.</p>
+              <!-- Card footer -->
+              <div class="card-footer px-1">
+                <span class="float-left font-weight-bold">
+                  <strong>{{price}}$</strong>
+                </span>
+                <span class="float-right">
+                  <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Quick Look">
+                    <i class="fas fa-eye grey-text ml-3"></i>
+                  </a>
+                  <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Wishlist">
+                    <i class="fas fa-heart grey-text ml-3"></i>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <!-- Card content -->
+
+            <!-- Card image -->
+            <div class="view view-cascade img-narrower overlay">
+              <img src="/media/{{main_image}}" class="card-img-top" alt="sample photo {{main_image}}">
+              <a>
+                <div class="mask rgba-white-slight waves-effect waves-light"></div>
+              </a>
+            </div>
+            <!-- Card image -->
+
+          </div>
+          <!-- Card -->
         </div>
-    {{/list}}
+    {{/each}}
+    </div>
 </script>
 {% endverbatim %}
-<script src="{% static 'js/collections.js' %}" charset="utf-8"></script>
+
 {% endblock %}
 
 {% block content %}
-    <header class="container">
 
-            <div class="btn-group categories-boxes d-block" data-toggle="buttons">
+<!-- // <div class="col-lg-4 col-md-6">
+//     {{description}}<br>
+//     {{price}}
+//     {{main_image}}
+//     <h1>{{main_image.url}}</h1>
+//     {{name}}
+//     {{price}}
+// </div> -->
+    <header>
+        <!-- CATEGORIES CHECKBOXES -->
+        <div class="w-100 btn-group categories-boxes my-3" data-toggle="buttons">
+            <div class="container">
                 <div class="row">
                     {% for category in categories %}
-                    <div class="col-6 col-md-3 p-0">
-                        <label class="btn btn-mdb-color btn-block square form-check-label">
-                          <input class="form-check-input" type="checkbox" name="selected-category" value="{{category.name}}" autocomplete="off">{{category.name}}
+
+                        {% if query%}
+                        <label class="col-6 col-md-3 btn btn-primary form-check-label {% if query|lower == category.name|lower %} active {% endif %} checkboxes">
+                          <input class="" type="checkbox" name="selected-categories" value="{{category.id}}" autocomplete="off" {% if query|lower == category.name|lower %} checked {% endif %}>{{category.name}}
                         </label>
-                    </div>
+                        {% else %}
+                        <label class="col-6 col-md-3 btn btn-primary form-check-label">
+                          <input type="checkbox" name="selected-categories" value="{{category.id}}" autocomplete="off">{{category.name}}
+                        </label>
+                        {% endif %}
                     {% endfor %}
+
                 </div>
             </div>
+        </div>
+        <!-- END OF CATEGORIES CHECKBOXES -->
+
+        <!-- GENDER AND SORTING  -->
+        <div class="container">
             <div class="row">
-            <div class="btn-group mt-5 " data-toggle="buttons">
-              <label class="btn btn-mdb-color form-check-label active">
-                <input class="" type="checkbox" checked autocomplete="off"> Pre-checked
-              </label>
-              <label class="btn btn-mdb-color form-check-label">
-                <input class="form-check-input" type="checkbox" autocomplete="off"> Check
-              </label>
-              <label class="btn btn-mdb-color form-check-label">
-                <input class="form-check-input" type="checkbox" autocomplete="off"> Check
-              </label>
+                <div class="col-12 col-sm-6">
+                    <form class="form-inline md-form form-sm my-1">
+                      <i class="fas fa-2x fa-sort mr-3"></i>
+                      <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" aria-label="Search" id="search">
+                      <i class="fas fa-search" aria-hidden="true"></i>
+                    </form>
+                </div>
+                <div class="col-12 p-0 col-sm-6 col-md-5 btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
+                    <label class="btn btn-primary checkboxes">
+                      <input type="checkbox" name="gender" value="F" autocomplete="off">
+                      <i class="fas fa-2x fa-venus"></i>
+                      <h5 class="d-inline-block m-0"> Women</h5>
+                    </label>
+                    <label class="btn btn-primary checkboxes">
+                      <input type="checkbox" name="gender" value="M" autocomplete="off">
+                      <i class="fas fa-2x fa-mars"></i>
+                      <h5 class="d-inline-block m-0"> Men</h5>
+                    </label>
+                </div>
             </div>
         </div>
-
-            <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
-                <label class="btn blue-gradient p-2 checkboxes">
-                    <input class="d-none" type="checkbox" name="gender" value="men" autocomplete="off">
-                        <i class="fas fa-2x fa-mars"></i>
-                        <h5 class="d-inline-block m-0"> Men</h5>
-                </label>
-                <label class="btn blue-gradient p-2 checkboxes">
-                    <input class="d-none" type="checkbox" name="gender" value="men" autocomplete="off">
-                    <i class="fas fa-2x fa-venus"></i>
-                    <h5 class="d-inline-block m-0"> Women</h5>
-                </label>
-                <label class="btn btn-elegant active">
-                  <input type="checkbox" checked autocomplete="off"> Checkbox 1 (pre-checked)
-                </label>
-                <label class="btn btn-primary">
-                  <input type="checkbox" autocomplete="off"> Checkbox 2
-                </label>
-                <label class="btn btn-primary">
-                  <input type="checkbox" autocomplete="off"> Checkbox 3
-                </label>
-            </div>
-
+        <!-- END OF GENDER AND SORTING -->
     </header>
     <br>
-    {{context}}
-    {{context.items}}
-    <img src="{{item.main_image.url}}" alt="">
-    {{ item.images.image }}
-    <br>
 
-    Catalog
+    <div class="container" id="catalog">
+
+    </div>
+
+{% endblock %}
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.1/handlebars.min.js" charset="utf-8"></script>
+<script src="{% static 'js/collections.js' %}" charset="utf-8"></script>
 {% endblock %}
