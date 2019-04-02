@@ -25,12 +25,26 @@ class Category(models.Model):
         return f'{self.name}'
 
 class Order(models.Model):
+    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10)
     items = models.TextField()
     address = models.TextField()
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
+class Address(models.Model):
+    user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
+    default = models.BooleanField(default=False)
+    state = models.CharField(blank=True, max_length=100)
+    address = models.CharField(blank=True, max_length=100)
+    complement = models.CharField(blank=True, max_length=100)
+    zip = models.CharField(blank=True, max_length=100)
+
+    @staticmethod
+    def get_default(self, user):
+        print(self)
+        address = user.addresses.filter(default=True)[0]
+        return address
 
 class Item(models.Model):
     GENDER_OPTIONS = (

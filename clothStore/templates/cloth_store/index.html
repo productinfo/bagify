@@ -4,22 +4,36 @@
 {% block title %}Bagify{% endblock %}
 
 {% block head %}
+<link href="https://fastcdn.org/Glide.js/2.0.4/css/glide.core.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 {% endblock %}
 
+
 {% block content %}
+<!-- <div class="col-12 offset-sm-2 offset-md-3 col-sm-8 col-md-6 position-fixed alert alert-info alert-dismissible fade show mb-1" role="alert">
+  <h4>Added to cart!</h4>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <hr>
+  <p class="mb-0">You can checkout your cart clicking <a href="/cart" class="alert-link">here.</a></p>
+</div>  -->
+
 <div id="carousel" class="carousel slide carousel-fade mb-4" data-ride="carousel">
     <!--Slides-->
     <div class="carousel-inner" role="listbox">
         {% for item in carousel %}
         <div class="carousel-item {% if forloop.first %}active{% endif %}">
             <div class="view">
+                <a href="{{item.url}}">
                 <img class="d-block w-100" src="{{ item.image.url }}" alt="slide">
                 <div class="mask rgba-black-light"></div>
+                </a>
             </div>
-            <div class="carousel-caption">
-                <h3 class="h3-responsive">{{ item.title }}</h3>
-                {% if item.subtitle %}<p class="d-none d-sm-block">{{ item.subtitle }}</p>{% endif %}
+            <div class="carousel-caption rgba-black-light">
+                <h1 class="h3-responsive">{{ item.title }}</h1>
+                {% if item.subtitle %}<p class="d-none d-sm-block mb-0">{{ item.subtitle }}</p>{% endif %}
             </div>
         </div>
         {% endfor %}
@@ -37,8 +51,9 @@
     <!--/.Controls-->
 </div>
 
+
 {% if popular and newest %}
-<section class="items-scroll my-5 p-1">
+<section class="items-scroll my-3 p-1">
     <h2 class="text-center my-3 header">
         <label>
             <input type="radio" name="scrollItemsToggler" value="#popularItems" checked>
@@ -53,28 +68,19 @@
     <div class="scrolling-wrapper dragscroll animated collapse" id="popularItems">
         {% for item in popular%}
         {% if item.main_image%}
-      <div class="card">
-          <!-- Card content -->
-          <!-- <div class="card-body elegant-color white-text rounded-top position-absolute w-100"> -->
-
-              <!-- Social shares button -->
-              <!-- <a class="activator waves-effect mr-4"><i class="fas fa-share-alt white-text"></i></a> -->
-              <!-- Title -->
-              <!-- <h4 class="card-title">Card title</h4> -->
-              <!-- <hr class="hr-light"> -->
-              <!-- Link -->
-              <!-- <a href="#!" class="white-text d-flex justify-content-end"><h5>Read more <i class="fas fa-angle-double-right"></i></h5></a> -->
-
-        <!-- </div> -->
-
-        <!-- Card Dark -->
-          <div class="card-image overlay p-0 m-0">
-              <img src="{{item.main_image.url}}" class="w-100" alt="image of product">
-              <!-- <a href="{% url 'product' item.pk %}">
-                  <div class="mask rgba-white-slight"></div>
-              </a> -->
+            <div class="card-naked">
+          <!--Featured image-->
+          <div class="view overlay hm-white-slight rounded">
+              <img src="{{item.main_image.url}}" class="hoverable img-fluid card-image" data-id="">
+              <a target="_blank" href ="#">
+                  <div class="mask rgba-grey-light"></div>
+              </a>
           </div>
-      </div>
+
+          <button data-toggle="tooltip" title="Add to cart" class="cart-button btn btn-white btn-sm" data-id="{{item.id}}" data-placement="left" title="Add to cart" alt="add item to cart">
+              <i class="fas fa-shopping-cart"></i>
+          </button>
+            </div>
         {% endif %}
         {% endfor %}
     </div>
@@ -82,21 +88,37 @@
     <div class="scrolling-wrapper dragscroll animated collapse" id="newItems">
         {% for item in newest%}
         {% if item.main_image %}
-      <div class="card">
-          <a href="{% url 'product' item.pk %}"><img src="{{item.main_image.url}}" class="w-100" alt=""></a>
+        <div class="card-naked">
+      <!--Featured image-->
+      <div class="view overlay hm-white-slight rounded">
+          <img src="{{item.main_image.url}}" class="hoverable img-fluid card-image" data-id="">
+          <a href ="#">
+              <div class="mask rgba-grey-light"></div>
+          </a>
       </div>
+
+      <button class="cart-button btn btn-white btn-sm" data-id="{{item.id}}" data-placement="left" title="Add to cart" alt="add item to cart">
+          <i class="fas fa-shopping-cart"></i>
+      </button>
+        </div>
         {% endif %}
         {% endfor %}
     </div>
 
-    <div class="float-left arrow text-light">
-        <i class="fa fa-angle-left fa-2x"></i>
+    <div class="arrow left">
+        <label class="btn btn-white btn-md">
+            <i class="fa fa-angle-left fa-2x"></i>
+        </label>
     </div>
-    <div class="float-right arrow text-light">
-        <i class="fa fa-angle-right fa-2x"></i>
+    <div class="arrow right">
+        <label class="btn btn-white btn-md">
+            <i class="fa fa-angle-right fa-2x"></i>
+        </label>
     </div>
+
 </section>
 {% endif %}
+
 
 <section class="company-details container p-3 my-3">
     <h3>Bagify</h3>
@@ -112,9 +134,9 @@
     <h2 class="text-center">Our collections:</h2>
     <div class="row justify-content-center"">
         {% for category in categories %}
-        <div class="col-6 col-sm-5 col-lg-3 p-0 view zoom">
+        <div class="col-6 col-sm-5 p-0 view zoom">
             <img class="img-fluid" src="{{ category.image.url }}" alt="image of the category">
-            <a href="/collections/{{category.name}}/"><div class="mask flex-center waves-effect waves-light rgba-black-strong">
+            <a href="/collections/{{category.name}}/"><div class="mask flex-center waves-effect waves-light rgba-black-light">
                 <h4 class="white-text">{{category.name}}</h4>
             </div></a>
         </div>
@@ -127,5 +149,6 @@
 
 {% block script %}
 <script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+
 <script src="{% static 'js/index.js' %}" charset="utf-8"></script>
 {% endblock %}

@@ -12,13 +12,12 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.5/css/mdb.min.css" rel="stylesheet">
 
-        <link rel="stylesheet" href="/css/base.css">
         {% block head %}{% endblock %}
     </head>
     <body>
         <header>
             <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a href="{% url 'home' %}" class="navbar-brand">Bagify</a>
+                <a href="{% url 'home' %}" class="navbar-brand"><h4><strong>BAGIFY</strong></h4></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
                   aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -63,14 +62,26 @@
         </header>
         {% block content %}
         {% endblock %}
-        <footer class="page-footer font-small elegant-color">
-            <div class="container-fluid">
-                <div class="row">
+        <footer class="page-footer font-small elegant-color pt-4">
+            <div class="container-fluid text-center text-md-left">
+                <div class="row mx-5">
+                    <div class="col-md-6 mt-md-0 px-3 mt-3">
+                        <h4 class="font-weight-normal">BAGIFY</h4>
+                        <p>We go with you!</p>
+                    </div>
+
+                    <hr class="clearfix w-100 d-md-none pb-3">
+
+                    <div class="col-md-6 mt-md-0 px-3 mt-3">
+                        <h5 class="text-uppercase">Final Project</h5>
+                        <p class="m-0">CS50's Web Proggramming with JS and Python.</p>
+                        <p class="mt-0 font-weight-normal">Project by Joao Schapke.</p>
+                    </div>
 
                 </div>
             </div>
             <div class="footer-copyright text-center py-3">© 2019 Copyright:
-                <a>No actual copyright</a>
+                <a> No actual copyright</a>
             </div>
         </footer>
 

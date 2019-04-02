@@ -22,6 +22,10 @@ def home(request):
 
 #Account Page
 def account(request):
+	# for key, value in request.user.items():
+		# print (key, value)
+	# print(request.user.keys())
+
 	return render(request, 'cloth_store/account.html')
 
 #Categories page
@@ -38,7 +42,7 @@ def collections(request, query = ''):
 def product(request, id):
 	product = get_object_or_404(Item, pk=id)
 
-	return render(product, 'cloth_store/product.html', {'product': product})
+	return render(request, 'cloth_store/product.html', {'product': product})
 
 
 def cart(request):
