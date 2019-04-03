@@ -59,8 +59,8 @@ class Item(models.Model):
     description = models.TextField(blank=True, null=True)
 
     category = models.ForeignKey('Category', related_name='items', on_delete=models.CASCADE, blank=True, null=True)
-    colors = models.TextField(blank=True, null=True)
-    stock = models.TextField(blank=True, null=True)
+    colors = models.TextField(default='[]', null=True)
+    stock = models.TextField(default='[]')
     main_image = models.ImageField(upload_to="main_images/", null=True, blank=True)
 
     sold_units = models.IntegerField(default=0)

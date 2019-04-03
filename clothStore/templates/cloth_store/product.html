@@ -42,18 +42,13 @@
                 <div class="col-12">
                     {% for color in colors %}
                         <label>
-                            <input type="radio" name="colors" value="{{color.name}}" hidden>
+                            <input type="radio" name="colors" value="{{color.label}}" hidden>
                             <a style="background-color:{{color.value}}" class="btn btn-primary btn-floating btn-lg btn-tw color-button" type="button" role="button"></a>
                         </label>
                     {% endfor %}
                 </div>
                 {% endif %}
 
-                {% if sizes %}
-                <div class="col-12">
-
-                </div>
-                {% endif %}
 
                 <div class="col-12">
                     <button type="button" class="btn btn-elegant btn-lg text.uppercase w-100" name="button">add to cart</button>
