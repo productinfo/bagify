@@ -18,7 +18,6 @@
 
 .items-scroll {
   position: relative;
-  overflow: hidden;
 }
 .items-scroll .header input {
   display: none;
@@ -33,16 +32,13 @@
   opacity: 0.9;
 }
 .items-scroll .scrolling-wrapper {
-  max-height: 250px;
+  max-height: 280px;
   width: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
   padding: 0;
   -webkit-overflow-scrolling: touch;
-}
-.items-scroll .scrolling-wrapper::-webkit-scrollbar {
-  display: none;
 }
 .items-scroll .scrolling-wrapper .card, .items-scroll .scrolling-wrapper .card-naked {
   height: 250px;
@@ -68,11 +64,22 @@
   margin: 0;
   padding: 0;
 }
-.items-scroll .scrolling-wrapper .card .cart-button, .items-scroll .scrolling-wrapper .card-naked .cart-button {
+.items-scroll .scrolling-wrapper .card .item-label, .items-scroll .scrolling-wrapper .card-naked .item-label {
   position: absolute;
   bottom: 0px;
   left: 0px;
   z-index: 3;
+  padding: 0.5rem 1.6rem;
+  font-size: 0.64rem;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+  color: #000;
+  margin: 0.375rem;
+  border-radius: 0.125rem;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
 }
 .items-scroll .arrow {
   z-index: 3;
@@ -101,11 +108,6 @@
   min-height: 100%;
   min-width: 100%;
   max-width: 110%;
-}
-
-.alert {
-  z-index: 4;
-  bottom: 0;
 }
 
 /*# sourceMappingURL=index.css.map */

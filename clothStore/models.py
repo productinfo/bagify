@@ -56,17 +56,17 @@ class Item(models.Model):
     name = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     gender = models.CharField(max_length=1, choices=GENDER_OPTIONS)
+    description = models.TextField(blank=True, null=True)
 
     category = models.ForeignKey('Category', related_name='items', on_delete=models.CASCADE, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
     colors = models.TextField(blank=True, null=True)
-    sizes = models.TextField(blank=True, null=True)
     stock = models.TextField(blank=True, null=True)
     main_image = models.ImageField(upload_to="main_images/", null=True, blank=True)
+
     sold_units = models.IntegerField(default=0)
     insertion_date = models.DateTimeField(default=timezone.now)
 
-    def addColors(self, *args):
+    def addColor(self, color):
         if self.colors:
             current = json.loads(self.colors)
         else:
@@ -76,8 +76,9 @@ class Item(models.Model):
             return 1
 
         for color in args:
-            if isinstance(color, str) and color not in current:
-                current.append(color.lower())
+            if isinstance(color, dict):
+                color.label = color.label.lower()
+                current.append(color)
         self.colors = json.dumps(current)
 
     def rmColors(self, *args):
@@ -101,41 +102,11 @@ class Item(models.Model):
             return None
         return json.loads(self.colors)
 
-    def getSizes(self):
-        if not self.sizes:
-            return None
-        return json.loads(self.sizes)
-
-    def addSizes(self, *args):
-        if not args:
-            return 1
-
-        if self.sizes:
-            current = json.loads(self.sizes)
-        else:
-            current = []
-
-        for size in args:
-            if isinstance(size, str) and size.lower() not in current:
-                current.append(size.lower())
-
-        self.sizes = json.dumps(current)
-        return 0
-
-    def rmSizes(self, *args):
-        if not self.sizes or not args:
-            return 1
-        sizes = json.loads(self.sizes)
-        for size in args:
-            sizes = [x for x in sizes if x != size.lower()]
-        self.sizes = json.dumps(sizes)
-        return 0
-
-    def changeStock(self, stock=0, size='', color='', action = 'set'):
+    def changeStock(self, action, stock=0, color=''):
         if action != 'add' and action != 'set':
             return 3
 
-        if type(stock) != int or stock < 1 or type(size) != str or type(color) != str:
+        if type(stock) != int or stock < 1 or type(color) != str:
             return 1
 
         if self.stock:
@@ -144,28 +115,28 @@ class Item(models.Model):
             stocks = []
 
         for i in range(len(stocks)):
-            if stocks[i]['size'] == size.lower() and stocks[i]['color'] == color.lower():
+            if stocks[i]['color'] == color.lower():
                 if action == 'add':
                     stocks[i]['stock'] = stocks[i]['stock'] + stock
                 elif action == 'set':
                     stocks[i]['stock'] = stock
                 break;
         else:
-            stocks.append({ 'size': size.lower(), 'color': color.lower(), 'stock': stock })
+            stocks.append({'color': color.lower(), 'stock': stock })
 
         self.stock = json.dumps(stocks)
         return 0
 
-    def getStock(self, size = '', color = ''):
+    def getStock(self, color = ''):
         if not self.stock:
             return 1
 
         stock = json.loads(self['stock'])
 
-        if not size and not color:
+        if not color:
             return stock
         else:
-            return next(item for item in stock if item['color'] == color and item['size'] == size)
+            return next(item for item in stock if item['color'] == color)
         return 2
 
     def getStocks(self):
@@ -173,8 +144,8 @@ class Item(models.Model):
                 return None
             return json.loads(self.stock)
 
-    def getImagesWithColor(self, color):
-        images = self.images.filter(color=color)
+    def getImagesWithColor(self, colorLabel):
+        images = self.images.filter(color=colorLabel)
         return images;
 
     def __str__(self):

@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.5/css/mdb.min.css" rel="stylesheet">
-
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         {% block head %}{% endblock %}
     </head>
     <body>
@@ -64,7 +64,7 @@
         {% endblock %}
         <footer class="page-footer font-small elegant-color pt-4">
             <div class="container-fluid text-center text-md-left">
-                <div class="row mx-5">
+                <div class="row mx-sm-5">
                     <div class="col-md-6 mt-md-0 px-3 mt-3">
                         <h4 class="font-weight-normal">BAGIFY</h4>
                         <p>We go with you!</p>
@@ -72,9 +72,9 @@
 
                     <hr class="clearfix w-100 d-md-none pb-3">
 
-                    <div class="col-md-6 mt-md-0 px-3 mt-3">
+                    <div class="col-12 col-md-6 mt-md-0 px-sm-3 mt-2">
                         <h5 class="text-uppercase">Final Project</h5>
-                        <p class="m-0">CS50's Web Proggramming with JS and Python.</p>
+                        <p class="m-0 d-none d-sm-block">CS50's Web Proggramming with JS and Python.</p>
                         <p class="mt-0 font-weight-normal">Project by Joao Schapke.</p>
                     </div>
 

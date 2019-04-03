@@ -1,24 +1,4 @@
-function getCookie(cname) {
-  const name = cname + "=";
-  const ca = document.cookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
-function setCookie(cname, cvalue, exdays) {
-  let d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  const expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 
 function indexPage() {
     function setItemsCollapse() {
@@ -64,21 +44,6 @@ function indexPage() {
 
     }
 
-    function addToCart(evt) {
-        const target = evt.target;
-        if(!target.classList.contains('cart-button')) return;
-
-        let newProduct = +target.dataset.id;
-        let cart = getCookie('cart') || '[]';
-
-        cart = JSON.parse(cart);
-        cart.push(newProduct);
-        cart = JSON.stringify(cart);
-        setCookie('cart', cart, 7);
-
-
-
-    }
 
     function init() {
         $('[data-toggle="tooltip"]').tooltip()
@@ -88,7 +53,6 @@ function indexPage() {
 
         document.querySelector('.arrow.right').addEventListener('click', () => scrollItems('right'));
 
-        document.querySelector('.items-scroll').addEventListener('click', addToCart)
 
         document.querySelector('.alert');
 

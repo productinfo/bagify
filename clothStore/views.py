@@ -41,7 +41,8 @@ def collections(request, query = ''):
 #Product page
 def product(request, id):
 	product = get_object_or_404(Item, pk=id)
-
+	print(product)
+	print(product.images.all())
 	return render(request, 'cloth_store/product.html', {'product': product})
 
 
