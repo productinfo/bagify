@@ -18,9 +18,10 @@ class Image(models.Model):
     color = models.ForeignKey('Color', related_name='images', on_delete=models.CASCADE)
 
     image = models.ImageField(upload_to="products_images/")
-    color = models.CharField(max_length=30, blank=True, null=True)
     main_display = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f'Image of {self.item} with {self.color} color'
 
 class Color(models.Model):
     item = models.ForeignKey('Item', related_name='colors', on_delete=models.CASCADE)
@@ -30,6 +31,9 @@ class Color(models.Model):
     stock = models.IntegerField(default=0)
 
     sold_units = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.label} color for {self.item}'
 
 
 class Category(models.Model):
