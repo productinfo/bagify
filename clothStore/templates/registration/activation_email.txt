@@ -1,1 +1,9 @@
-Welcome
+Welcome to Bagify
+We are glad to have you on board!
+
+Activate your account at: {{site}}/activate/{{activation_key}}
+Happy shopping.
+If you did not registered an account on Bagify please ignore this message.
+
+CS50's Web Programming with Python and Javascript
+Project by Joao Schapke

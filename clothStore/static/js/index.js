@@ -41,7 +41,6 @@ function indexPage() {
               left: newScroll,
               behavior: 'smooth'
             });
-
     }
 
 
@@ -49,12 +48,10 @@ function indexPage() {
         $('[data-toggle="tooltip"]').tooltip()
         setItemsCollapse();
 
-        document.querySelector('.arrow.left').addEventListener('click', () => scrollItems('left'));
 
+        document.querySelector('.arrow.left').addEventListener('click', () => scrollItems('left'));
         document.querySelector('.arrow.right').addEventListener('click', () => scrollItems('right'));
 
-
-        document.querySelector('.alert');
 
 
     }

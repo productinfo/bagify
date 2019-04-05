@@ -15,80 +15,10 @@ class ItemMethodsTestCase(TestCase):
 
         self.assertEqual(float(pijama.price), 19.99)
         self.assertEqual(pijama.description, 'cozy')
-        self.assertEqual(cortez.sizes, None)
-        self.assertEqual(cortez.colors, None)
-
-    def test_improper_usage_get_add_rm_methods(self):
-        """ Using methods improperly will return an int and not an error """
-
-        pijama = Item.objects.get(name='pink pijamas')
-        cortez = Item.objects.get(name='cortez')
-
-        self.assertEqual(pijama.rmColors('tango'), 1)
-        self.assertEqual(pijama.rmSizes('colors', 'blue', 'green', 'mario'), 1)
-
-        self.assertEqual(pijama.rmColors(13), 1)
-        self.assertEqual(cortez.getColors(), None)
-
-        cortez.addColors( 1, 5, 'green', ['blue', 'pink'], 'luigi')
-        self.assertEqual(cortez.getColors(), ['green', 'luigi'])
-
-        cortez.addSizes(23, 32, 49, '15', '30', 'medium', 'large')
-        self.assertEqual(cortez.getSizes(), ['15', '30', 'medium', 'large'])
 
 
-    def test_usage_colors(self):
-        """ Tests if color methods are doing what they should """
-        cortez = Item.objects.get(name='cortez')
 
-        cortez.addColors('Blue', 'Green', 'brown')
-        self.assertEqual(cortez.getColors(), ['blue', 'green', 'brown'])
 
-        cortez.rmColors('blue', 'orange', 'brown')
-
-        self.assertEqual(cortez.getColors(), ['green'])
-
-        cortez.addColors('colors', 'red', ['tango'])
-        cortez.rmColors('colors', 12, 'green')
-
-        self.assertEqual(cortez.getColors(), ['red'])
-
-    def test_usage_sizes(self):
-        """ Tests if Size methods work properly """
-        cortez = Item.objects.get(name='cortez')
-        whoosh = Item.objects.get(name='whoosh')
-
-        self.assertEqual(cortez.getSizes(), None)
-
-        cortez.addSizes('Medium', 10)
-        cortez.addSizes('Large')
-        self.assertEqual(cortez.getSizes(), [ 'medium', 'large'])
-
-        cortez.rmSizes('large')
-        self.assertEqual(cortez.getSizes(), ['medium'])
-
-        whoosh.addSizes('Small', 'larGe')
-        self.assertEqual(whoosh.getSizes(), ['small', 'large'])
-
-        cortez = Item.objects.get(name='cortez')
-
-        self.assertEqual(cortez.addSizes(['medium', 4]), 0)
-
-        self.assertEqual(cortez.rmSizes('12'), 0)
-
-    def test_usage_of_stock_methods(self):
-        """Checks if Stock methods work properly """
-        cortez = Item.objects.get(name='cortez')
-
-        cortez.changeStock(size='Medium', color='grey', stock=50)
-        cortez.changeStock(size='medium', color='Grey', stock=10)
-
-        cortez.changeStock(size='Large', color='blue', stock=100)
-        cortez.changeStock(size='large', color='blue', stock= 100, action= 'add')
-
-        self.assertEqual(cortez.getStocks(), [
-        {'size':'medium', 'color':'grey', 'stock':10},
-        {'size':'large', 'color':'blue', 'stock':200}])
 
 class CarouselImageTestCase(TestCase):
     def setUp(self):
@@ -117,14 +47,18 @@ class ImageTestCase(TestCase):
 
         self.item = Item.objects.create(name='Swiss', price=45.00, gender='F')
 
-        Image.objects.create(item=self.item, image=image, color='blue')
-        Image.objects.create(item=self.item, image=image, color='blue')
-        self.grey = Image.objects.create(item=self.item, image=image, color='grey')
-        self.purble = Image.objects.create(item=self.item, image=image, color='purple')
+        self.blue = Color.objects.create(label='blue', value='#00F', item=self.item)
+        self.black = Color.objects.create(label='Black', value='#000', item=self.item)
+        self.grey = Color.objects.create(label='grey', value='#CCC', item=self.item)
+
+        Image.objects.create(item=self.item, image=image, color=self.blue)
+        Image.objects.create(item=self.item, image=image)
+        Image.objects.create(item=self.item, image=image, color=self.grey)
+        Image.objects.create(item=self.item, image=image, color=self.black)
         Image.objects.create(item=self.item, image=image)
 
     def test_basic_data(self):
         """Tests if Item contains it's images """
         self.assertEqual(self.item.images.count(), 5);
-        self.assertEqual(self.item.getImagesWithColor('blue').count(), 2)
-        self.assertEqual(self.item.getImagesWithColor('grey').count(), 1)
+        self.assertEqual(self.item.get_images_with_color('blue').count(), 1)
+        self.assertEqual(self.item.get_images_with_color('black').count(), 1)

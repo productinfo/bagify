@@ -12,10 +12,13 @@ class CarouselImage(models.Model):
     item = models.ForeignKey('Item', related_name='carousel', on_delete=models.CASCADE, null=True, blank=True)
     url = models.CharField(max_length=800, null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.title}'
+
 
 class Image(models.Model):
     item = models.ForeignKey('Item', related_name="images", on_delete=models.CASCADE)
-    color = models.ForeignKey('Color', related_name='images', on_delete=models.CASCADE)
+    color = models.ForeignKey('Color', related_name='images', on_delete=models.CASCADE, null=True)
 
     image = models.ImageField(upload_to="products_images/")
     main_display = models.BooleanField(default=False)
@@ -35,6 +38,10 @@ class Color(models.Model):
     def __str__(self):
         return f'{self.label} color for {self.item}'
 
+    def get_main_image(self):
+        query = Image.objects.filter(color=self, main_display=True)[0]
+        return query or None
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -52,6 +59,9 @@ class Order(models.Model):
     address = models.TextField()
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
+    def __str__(self):
+        return f'({self.user}) - Status: {self.status}'
+
 
 class Address(models.Model):
     user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
@@ -63,7 +73,6 @@ class Address(models.Model):
 
     @staticmethod
     def get_default(self, user):
-        print(self)
         address = user.addresses.filter(default=True)[0]
         return address
 
@@ -81,13 +90,17 @@ class Item(models.Model):
     description = models.TextField(blank=True, null=True)
 
     category = models.ForeignKey('Category', related_name='items', on_delete=models.CASCADE, blank=True, null=True)
-    main_image = models.ImageField(upload_to="main_images/", null=True, blank=True)
 
     total_units_sold = models.IntegerField(default=0)
     insertion_date = models.DateTimeField(default=timezone.now)
 
-    def getImagesWithColor(self, colorLabel):
-        pass
+    def get_images_with_color(self, colorLabel):
+        query = self.colors.filter(label__iexact=colorLabel)[0]
+        return query.images or None
+
+    def get_display_images(self):
+        query = Image.objects.filter(item=self, main_display=True)
+        return query or None
 
     def __str__(self):
         return f'{self.name}'

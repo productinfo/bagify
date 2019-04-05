@@ -18,6 +18,7 @@
 
 .items-scroll {
   position: relative;
+  overflow-y: hidden;
 }
 .items-scroll .header input {
   display: none;
@@ -31,6 +32,7 @@
 .items-scroll .header span:hover {
   opacity: 0.9;
 }
+
 .items-scroll .scrolling-wrapper {
   max-height: 280px;
   width: 100%;
@@ -81,10 +83,11 @@
   text-align: center;
   vertical-align: middle;
 }
+
 .items-scroll .arrow {
   z-index: 3;
   position: absolute;
-  bottom: 180px;
+  top: 100px;
 }
 .items-scroll .left {
   left: 0px;

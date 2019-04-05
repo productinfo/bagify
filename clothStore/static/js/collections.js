@@ -1,6 +1,6 @@
 function collection() {
-    let data = {
-        items: django_data,
+    const data = {
+        items: items_data,
         constraints: {
             categories: [],
             gender: [],
@@ -9,32 +9,24 @@ function collection() {
         sortBy: '',
     };
 
-    let view = {
+    const view = {
         categories: document.getElementsByName('selected-categories'),
         genders: document.getElementsByName('gender'),
         search: document.getElementById('search'),
-        catalog: document.getElementById('catalog'),
-
-        loadCatalog(items) {
-            this.catalog.innerHTML = '';
-
-            let source = document.getElementById('catalog-template').innerHTML;
-            let template = Handlebars.compile(source);
-            let html = template({'items': items});
-
-            this.catalog.innerHTML = html;
-        },
+        items: document.querySelectorAll('[data-id]'),
     };
 
     function init() {
-        gatherConstraints();
+        updateCatalog();
 
+        // sets listeners for every input field to update the catalog
         [...view.categories, ...view.genders].forEach(element => element.onchange = updateCatalog );
-        view.search.addEventListener('input', updateCatalog)
+        view.search.addEventListener('input', updateCatalog);
     }
 
     function gatherConstraints() {
         data.constraints.categories = [];
+
         view.categories.forEach(category => {
             if(category.checked) data.constraints.categories.push(category.value);
         })
@@ -47,7 +39,7 @@ function collection() {
         data.constraints.query = view.search.value;
     }
 
-    function filterItems() {
+    function filterItemsIds() {
         let filtered = data.items;
 
         if(data.constraints.categories.length > 0) {
@@ -73,7 +65,8 @@ function collection() {
             }
         }
 
-        return filtered
+        const ids = filtered.map(item => item.id)
+        return ids;
     }
 
     function sortedItems(items) {
@@ -84,11 +77,18 @@ function collection() {
     }
 
     function updateCatalog(evt) {
+
+        // updates the constraints of the items
         gatherConstraints();
 
-        let filtered_items = filterItems();
+        // gets a list of id's of every item that fits the constraints
+        let filtered_items_ids = filterItemsIds();
 
-        view.loadCatalog(filtered_items);
+        // hides the elements not on the list
+        for(card of view.items) {
+            card.hidden = (filtered_items_ids.includes(+card.dataset.id)) ? false : true;
+        }
+
     }
 
     init();

@@ -4,11 +4,11 @@ from .models import Item, Category, Image, Order, CarouselImage, Address, Color
 
 class ImagesInline(admin.StackedInline):
     model = Image
-    extra = 3
+    extra = 1
 
 class ColorInline(admin.StackedInline):
     model = Color
-    extra = 2
+    extra = 1
 
 class ItemAdmin(admin.ModelAdmin):
     fields = [
@@ -18,11 +18,10 @@ class ItemAdmin(admin.ModelAdmin):
         'gender',
         'description',
         'total_units_sold',
-        'main_image'
     ]
     inlines = [
+        ColorInline,
         ImagesInline,
-        ColorInline
     ]
 
 

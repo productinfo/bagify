@@ -13,8 +13,8 @@ from paypal.standard.forms import PayPalPaymentsForm
 #Home page
 def home(request):
 	carousel = CarouselImage.objects.all()
-	mostPopular = Item.objects.order_by('-sold_units')[:8]
-	newestAdditions = Item.objects.order_by('-id')[:8]
+	mostPopular = Color.objects.order_by('-sold_units')[:10]
+	newestAdditions = Color.objects.order_by('-id')[:10]
 	categories = Category.objects.all()
 
 	return render(request, 'cloth_store/index.html', {'carousel': carousel, 'newest': newestAdditions, 'popular': mostPopular, 'categories': categories })
@@ -22,9 +22,6 @@ def home(request):
 
 #Account Page
 def account(request):
-	# for key, value in request.user.items():
-		# print (key, value)
-	# print(request.user.keys())
 
 	return render(request, 'cloth_store/account.html')
 
@@ -32,17 +29,18 @@ def account(request):
 def collections(request, query = ''):
 
 	categories = Category.objects.all().values()
-	items = Item.objects.all().values()
-	items_json = json.dumps(list(items), cls=DjangoJSONEncoder)
 
-	return render(request, 'cloth_store/collections.html', {'categories': categories, 'query': query, 'items': items_json})
+	items_values = Item.objects.all().values()
+	items_json = json.dumps(list(items_values), cls=DjangoJSONEncoder)
+
+	items = Item.objects.all()
+
+	return render(request, 'cloth_store/collections.html', {'categories': categories, 'query': query, 'items_json': items_json, 'items':items})
 
 
 #Product page
 def product(request, id):
 	product = get_object_or_404(Item, pk=id)
-	print(product)
-	print(product.images.all())
 	return render(request, 'cloth_store/product.html', {'product': product})
 
 

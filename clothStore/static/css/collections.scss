@@ -1,15 +1,18 @@
-.checkboxes {
-
+.category-checkbox div{
+    border-bottom: 1px solid black
 }
 
-.checkboxes input:checked + .badge {
-    background-color: black;
-    color: white;
+.filter-checkbox div{
+    opacity: 0.6;
+    font-weight: 400
 }
 
-.checkboxes .badge {
-    background-color: white;
-    color: black;
+.filter-checkbox input:checked + div {
+    opacity: 1
+}
+
+.filter-checkbox:hover div {
+    opacity: 0.8
 }
 
 .card.card-cascade.wider {

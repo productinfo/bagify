@@ -58,13 +58,13 @@
     </h2>
 
     <div class="scrolling-wrapper dragscroll animated collapse" id="popularItems">
-        {% for item in popular%}
-        {% if item.main_image%}
+        {% for object in popular%}
+        {% if object.get_main_image%}
             <div class="card-naked">
           <!--Featured image-->
           <div class="view overlay hm-white-slight rounded">
-              <img src="{{item.main_image.url}}" class="hoverable img-fluid card-image" data-id="">
-              <a href ="{% url 'product' item.id %}">
+              <img src="{{object.get_main_image.image.url}}" class="hoverable img-fluid card-image" data-id="">
+              <a href ="{% url 'product' object.item.id %}">
                   <div class="mask rgba-grey-light">
                       <div class="btn btn-lg btn-white">
                           See details
@@ -74,7 +74,7 @@
           </div>
 
           <div class="item-label">
-              ${{ item.price }}
+              ${{ object.item.price }}
           </div>
 
             </div>
@@ -83,19 +83,19 @@
     </div>
 
     <div class="scrolling-wrapper collapse" id="newItems">
-        {% for item in newest%}
-        {% if item.main_image %}
+        {% for object in newest%}
+        {% if object.get_main_image %}
         <div class="card-naked">
-      <!--Featured image-->
-      <div class="view overlay hm-white-slight rounded">
-          <img src="{{item.main_image.url}}" class="hoverable img-fluid card-image" data-id="">
-          <a href ="{% url 'product' item.id %}">
+            <!--Featured image-->
+            <div class="view overlay hm-white-slight rounded">
+          <img src="{{object.get_main_image.image.url}}" class="hoverable img-fluid card-image" data-id="">
+          <a href ="{% url 'product' object.item.id %}">
               <div class="mask rgba-grey-light"></div>
           </a>
       </div>
 
       <div class="item-label">
-          ${{ item.price }}
+          ${{ object.item.price }}
       </div>
         </div>
         {% endif %}
@@ -112,7 +112,6 @@
             <i class="fa fa-angle-right fa-2x"></i>
         </label>
     </div>
-
 </section>
 {% endif %}
 
