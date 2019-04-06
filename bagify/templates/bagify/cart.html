@@ -1,0 +1,31 @@
+{% extends 'bagify/base.html' %}
+
+{% block content %}
+
+<main class="container cart my-5">
+
+    <h2 class="">Cart</h2>
+    {% for product in cart %}
+    <div class="row cart-row">
+        <div class="col-4">
+            <img src="{{product.image}}" class="w-100" alt="">
+        </div>
+        <div class="col-3">
+            <h4>{{product.name}}</h4>
+            <p>{{product.category}}</p>
+        </div>
+        <div class="col-2">
+            <p>${{product.price}}</p>
+        </div>
+        <div class="col-2">
+            <p class="text-uppercase">{{product.color}}</p>
+        </div>
+        <div class="col-1">
+
+        </div>
+    </div>
+    {% endfor %}
+</main>
+
+
+{% endblock %}

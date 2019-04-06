@@ -1,0 +1,113 @@
+{% extends 'bagify/base.html'%}
+{% load static %}
+
+{% block head %}
+<script src="{% static 'js/cookies.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/product.js' %}" charset="utf-8"></script>
+{% endblock %}
+
+{% block content %}
+
+<!-- TOASTER -->
+<div class="toasty" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" hidden>
+        <div class="wrapper top-right" id="notification-3">
+            <div class="row-class">
+                <div class="title-panel">
+                    <p class="title"></p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-12 col-md-12 col-lg-12 body">
+                </p>
+            </div>
+        </div>
+    </div>
+<!-- END OF TOASTER -->
+
+<!-- CONTENT -->
+<div class="container product my-3" data-id="{{product.id}}" data-name="{{product.name}}">
+
+    <div class="row my-3">
+        <!-- IMAGES -->
+        <div class="col-12 col-md-8">
+            <div class="row justify-content-center">
+
+                <!-- SELECT IMAGE -->
+                <div class="col-3">
+                    {% for color in product.colors.all %}
+
+                    <div class="row frame_row" hidden data-color={{color.label}}>
+                        {% for image in color.images.all %}
+                            <div class="col-12">
+                                <label class="view overlay">
+                                    <input type="radio" name="{{color.label}}" value="{{ image.image.url }}"
+                                    {% if forloop.first %}checked{% endif %} hidden>
+                                    <img src="{{ image.image.url }}" class="w-100" alt="product image">
+                                    <div class="mask waves-effect waves-light rgba-white-slight">
+                                    </div>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% endfor %}
+                </div>
+                <!--  END OF SELECT  -->
+
+                <div class="col-9 col-lg-8 image-container">
+                    <img src="" class="w-100" alt="image of product" id='displayed-image'>
+                </div>
+            </div>
+        </div>
+        <!-- END OF IMAGES -->
+
+        <div class="col-12 col-md-4">
+            <div class="row">
+                <div class="col-12 mt-3">
+                    {% if product.category %}
+                    <p class="text-muted mb-1 text-uppercase">{{product.category}}</p>
+                    {% endif %}
+                    <div class="row justify-content-between">
+                        <h4 class="col text-uppercase">{{product.name}} </h4>
+                        <small class="h5 mx-3">${{product.price}}</small>
+                        <hr class="col-12">
+                    </div>
+
+                </div>
+                {% if product.colors %}
+                <div class="col-12">
+                    <h4>Colors</h4>
+                    {% for color in product.colors.all %}
+                        <label class="color-option">
+                            <input type="radio" name="colors" value="{{color.label}}" {% if forloop.first %}checked{% endif %} hidden>
+                            <a style="background-color:{{color.value}}" class="btn btn-floating btn-lg btn-tw color-button" type="button" role="button"></a>
+                        </label>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+                <div class="col-12">
+                    <button type="button" id="add_to_cart_btn" class="btn btn-elegant btn-lg text.uppercase w-100" name="button">add to cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    {% if product.description %}
+    <div class="row my-3">
+        <div class="col-12">
+            <h6 class="h6 text-center text-uppercase">description</h6>
+            <p class="text-muted">{{product.description}}</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+<!-- END OF CONTENT -->
+
+
+{% endblock %}

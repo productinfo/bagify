@@ -1,0 +1,96 @@
+{% extends 'bagify/base.html'%} {% block content %}
+<main class="container">
+  <div class="row my-2">
+    <div class="col-12">
+      <h2>{{user}}</h2>
+      <hr />
+    </div>
+    <div class="col-md-3 col-12 my-2">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-account-list" data-toggle="list" href="#list-account" role="tab"aria-controls="home">Account</a>
+        <a class="list-group-item list-group-item-action" id="list-orders-list" data-toggle="list" href="#list-orders" role="tab" aria-controls="profile">Orders</a>
+        <a class="list-group-item list-group-item-action" id="list-address-list" data-toggle="list" href="#list-address" role="tab" aria-controls="messages">Address</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+    <div class="col-12 col-md-8 my-2">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
+            <div class="row my-3">
+                <div class="col-12 col-lg-6">
+                    <h2 class="text-center">Account Details:</h2>
+                </div>
+                <div class="col-lg-6">
+                    <p>Name: {{user.first_name}} {{user.last_name}}</p>
+                    <p>Email: {{user.email}}</p>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-lg-6">
+                  <h4 class="text-center">Latest Orders:</h4>
+                  <div class="list-group-flush list-group">
+                    {% for order in user.orders.all|dictsort:"date"|slice:"5" %}
+
+                    <li class="list-group-item">
+                      <a class="btn-floating btn-sm"><i class="far fa-eye"></i></a>
+                      {{order}}
+                    </li>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <h4 class="text-center">Home address:</h4>
+                  <hr class="mt-1">
+                  {%for address in user.addresses.all%} {%if address.default%}
+                  {{address}} {% endif%} {%endfor%}
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade my-2" id="list-orders" role="tabpanel" aria-labelledby="list-orders-list">
+          <h2>My orders</h2>
+        </div>
+        <div class="tab-pane fade my-2" id="list-address" role="tabpanel" aria-labelledby="list-address-list">
+          a
+        </div>
+        <div class="tab-pane fade my-2" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
+            <form class="clearfix" method="post">
+                <div class="form-row">
+                    <h4>Change password</h4>
+                    <div class="col-12">
+                        <div class="md-form">
+                          <input type="text" id="old-password" class="form-control">
+                          <label for="old-password">Current password</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                          <input type="text" id="old-password" class="form-control">
+                          <label for="old-password">Current password</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                          <input type="text" id="old-password" class="form-control">
+                          <label for="old-password">Current password</label>
+                        </div>
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-indigo float-right">Change password</button>
+            </form>
+
+            <form class="clearfix" method="post">
+                <h4>Delete account</h4>
+                <div class="md-form">
+                  <i class="fas fa-lock prefix"></i>
+                  <input type="password" id="inputValidationEx2" class="form-control validate">
+                  <label for="inputValidationEx2" data-error="wrong" data-success="right">Type your password</label>
+                </div>
+                <button type="button" class="btn btn-danger float-right">Delete Account</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

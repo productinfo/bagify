@@ -52,7 +52,7 @@ LOGIN_URL = '/login/'
 # Application definition
 
 INSTALLED_APPS = [
-    'clothStore',
+    'bagify',
     'django.contrib.auth',
     'registration',
     'django.contrib.admin',

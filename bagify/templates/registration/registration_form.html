@@ -1,0 +1,12 @@
+{% extends 'bagify/base.html'%}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" id="register-button">Submit</button>
+</form>
+
+{% endblock %}

@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-	path('', include('clothStore.urls')),
+	path('', include('bagify.urls')),
     path('',include('registration.backends.default.urls')),
     path('admin/', admin.site.urls),
 ]
