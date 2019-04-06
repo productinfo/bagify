@@ -1,5 +1,5 @@
 from django.test import TestCase
-from clothStore.models import *
+from bagify.models import *
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class ItemMethodsTestCase(TestCase):
