@@ -75,13 +75,21 @@
 }
 
 .cart {
-    .cart-row {
-        height: 110px;
-        border-bottom: 1px solid grey;
+    .cart-item {
+        border-bottom: 1px solid #ccc;
 
         img {
+            margin: 5px 0;
+            box-sizing: border-box;
             height: 100px;
             object-fit: cover;
+        }
+
+        .content_center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
         }
     }
 }

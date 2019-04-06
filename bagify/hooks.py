@@ -19,12 +19,12 @@ def show_me_the_money(sender, **kwargs):
 
         # Undertake some action depending upon `ipn_obj`.
         if ipn_obj.custom == "premium_plan":
-            price = ...
+            pass
         else:
-            price = ...
+            pass
 
         if ipn_obj.mc_gross == price and ipn_obj.mc_currency == 'USD':
-            ...
+            pass
     else:
         pass
 

@@ -9,6 +9,7 @@ urlpatterns = [
 	path('collections/', views.collections, name='collections'),
 	path('account/', views.account, name='account'),
 	path('cart/', views.cart, name='cart'),
+	path('checkout/', views.checkout, name='checkout'),
 
 	path('paypal/', include('paypal.standard.ipn.urls')),
 	path('payment_done', TemplateView.as_view(template_name='alert/payment_done.html'), name='payment_done'),

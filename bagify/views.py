@@ -5,7 +5,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.cache import cache
 from django.conf import settings
 
+from .utils import getCart, give_me_money_paypal
 from .models import *
+
 from paypal.standard.forms import PayPalPaymentsForm
 # Create your views here.
 
@@ -45,36 +47,15 @@ def product(request, id):
 
 
 def cart(request):
-	cookies = request.COOKIES.get('cart')
-	if not cookies:
-		return render(request, 'bagify/cart.html')
-
-	cart = json.loads(cookies)
-	bigCart = []  # new cart which will contain all data being passed back
-
-	for product in cart:
-		item = {
-			'id': product['id'],
-			'color': product['color']
-		}
-		productModel = Item.objects.filter(pk=product['id'])[0]
-		if not productModel:
-			continue
-
-		if productModel.category:
-			item['category'] = productModel.category.name
-
-		item['price'] = float(productModel.price)
-		item['name'] = productModel.name
-		item['image'] = productModel.colors.get(label__iexact=product['color']).get_main_image().image.url
-
-		bigCart.append(item)
-
-	return render(request, 'bagify/cart.html', {'cart': bigCart})
+	cart = getCart(request)
+	return render(request, 'bagify/cart.html', { 'cart': cart })
 
 def checkout(request):
+	cart = getCart(request)
 
-	return render(request, 'bagify/cart.html')
+	paypal = give_me_money_paypal(request, "10.00","a bag ", "cool bags")
+	print(paypal)
+	return render(request, 'bagify/checkout.html', { 'cart': cart, "paypal": paypal })
 
 
 

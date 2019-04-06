@@ -1,4 +1,10 @@
 {% extends 'bagify/base.html' %}
+{% load static %}
+
+{% block head %}
+<script src="{% static 'js/cookies.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/cart.js' %}" charset="utf-8"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -6,25 +12,38 @@
 
     <h2 class="">Cart</h2>
     {% for product in cart %}
-    <div class="row cart-row">
-        <div class="col-4">
-            <img src="{{product.image}}" class="w-100" alt="">
+    <div class="row cart-item my-3" data-id="{{product.id}}" data-color="{{product.color}}" data-price="{{product.price}}">
+        <div class="col-12 col-sm-6">
+            <a href="{% url 'product' product.id %}" class="waves-effect waves-light"><img src="{{product.image}}" class="w-100" alt="image of product"></a>
         </div>
-        <div class="col-3">
-            <h4>{{product.name}}</h4>
-            <p>{{product.category}}</p>
-        </div>
-        <div class="col-2">
-            <p>${{product.price}}</p>
-        </div>
-        <div class="col-2">
-            <p class="text-uppercase">{{product.color}}</p>
-        </div>
-        <div class="col-1">
-
+        <div class="col-12 col-sm-6">
+            <h4 class=" content_center">{{product.name}}</h4>
+            <p class="text-muted  content_center mb-1">{{product.category}}</p>
+            <div class="row">
+                <div class="col-4 content_center">
+                    <strong>${{product.price}}</strong>
+                </div>
+                <div class="col-4 content_center text-uppercase">
+                    {{product.color}}
+                </div>
+                <div class="col-4 content_center">
+                    <button type="button" class="btn btn-sm btn-primary remove" name="button">x</button>
+                </div>
+            </div>
         </div>
     </div>
     {% endfor %}
+
+    <div class="details-block row">
+        <div class="col-6">
+            <h4>Total: <span class="total-price"></span></h4>
+            <p>Number of Items: <span class="total-items"></span></p>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'checkout' %}" role="button" class="btn btn-elegant btn-block btn-lg w-100">Checkout</a>
+            <a href="{% url 'collections' %}" role="button" class="btn btn-elegant btn-block btn-sm w-100 my-1">Continue shopping</a>
+        </div>
+    </div>
 </main>
 
 

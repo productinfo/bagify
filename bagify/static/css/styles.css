@@ -63,13 +63,19 @@
   border-left-color: #B82E24;
 }
 
-.cart .cart-row {
-  height: 110px;
-  border-bottom: 1px solid grey;
+.cart .cart-item {
+  border-bottom: 1px solid #ccc;
 }
-.cart .cart-row img {
+.cart .cart-item img {
+  margin: 5px 0;
+  box-sizing: border-box;
   height: 100px;
   object-fit: cover;
+}
+.cart .cart-item .content_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
