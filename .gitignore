@@ -1,4 +1,4 @@
-media/*
+media
 db.sqlite3
 geckodriver.log
 images
