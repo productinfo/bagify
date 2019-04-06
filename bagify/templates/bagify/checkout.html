@@ -4,6 +4,51 @@
 {% endblock %}
 
 {% block content %}
+<!-- Horizontal Steppers -->
+<div class="row">
+  <div class="col-md-12">
+
+    <!-- Stepers Wrapper -->
+    <ul class="stepper stepper-horizontal">
+
+      <!-- First Step -->
+      <li class="">
+        <a href="{% url 'cart' %}">
+          <span class="circle bg-success"><i class="fas fa-check"></i></span>
+          <span class="label">Cart</span>
+        </a>
+      </li>
+
+      <!-- Second Step -->
+      <li class="active">
+        <a href="#!">
+          <span class="circle"><i class="fas fa-exclamation"></i></span>
+          <span class="label">Delivery Information</span>
+        </a>
+      </li>
+
+      <!-- Third Step -->
+      <li class="">
+        <a href="#!">
+          <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
+          <span class="label">Payment</span>
+        </a>
+      </li>
+
+    </ul>
+    <!-- /.Stepers Wrapper -->
+
+  </div>
+</div>
+<!-- /.Horizontal Steppers -->
+
+<section class="address">
+
+</section>
+
+<section class="payment">
+
+</section>
 
     {{paypal.render}}
 
