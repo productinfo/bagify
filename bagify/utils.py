@@ -3,9 +3,10 @@ import json
 from django.conf import settings
 from django.urls import reverse
 
-from paypal.standard.forms import PayPalPaymentsForm
-
+from .hooks import PayPalClient
 from .models import *
+
+from paypalcheckoutsdk.orders import OrdersGetRequest
 
 def makeOrder():
 	pass
@@ -53,20 +54,52 @@ def getCart(request):
 
 	return bigCart
 
-def give_me_money_paypal(request, price, name, unique_id):
+def getTotal(request):
+		cookies = request.COOKIES.get('cart')
+		if not cookies:
+			return 0
 
-    # What you want the button to do.
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": price,
-        "item_name": name,
-        "invoice": unique_id,
-        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-        "return": request.build_absolute_uri(reverse('payment_done')),
-        "cancel_return": request.build_absolute_uri(reverse('payment_cancelled')),
-    }
+		cart = json.loads(cookies)
+		total = 0
 
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
+		for product in cart:
+			item = Item.objects.filter(pk=product['id'])[0]
+			if not item:
+				continue
+			total = total + float(item.price)
 
-    return form
+		return total
+
+class GetOrder(PayPalClient):
+
+#2. Set up your server to receive a call from the client
+	"""You can use this function to retrieve an order by passing order ID as an argument"""
+	def get_order(self, order_id, real_total):
+		"""Method to get order"""
+		request = OrdersGetRequest(order_id)
+		#3. Call PayPal to get the transaction
+		response = self.client.execute(request)
+		#4. Save the transaction in your database. Implement logic to save transaction to your database for future reference.
+
+
+		print('Status Code: ', response)
+		print('Status: ', response.result)
+		print('Order ID: ', response.result.id)
+		print('Intent: ', response.result.intent)
+		print('Links:')
+		for link in response.result.links:
+			print('\t{}: {}\tCall Type: {}'.format(link.rel, link.href, link.method))
+		print('Gross Amount: {} {}'.format(response.result.purchase_units[0].amount.currency_code, response.result.purchase_units[0].amount.value))
+
+		if response.status_code != 200:
+			return 4
+
+		if response.result.purchase_units[0].amount.value != real_total:
+			return 1
+
+		if response.result.id != 'COMPLETED':
+			return 2
+
+		if response.result.purchase_units[0].amount.currency_code != 'USD':
+			return 3
+		return 0

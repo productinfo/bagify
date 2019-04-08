@@ -1,31 +1,47 @@
-from paypal.standard.models import ST_PP_COMPLETED
-from paypal.standard.ipn.signals import valid_ipn_received
-from django.conf import settings
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 
-def show_me_the_money(sender, **kwargs):
-    ipn_obj = sender
-    if ipn_obj.payment_status == ST_PP_COMPLETED:
-        # WARNING !
-        # Check that the receiver email is the same we previously
-        # set on the `business` field. (The user could tamper with
-        # that fields on the payment form before it goes to PayPal)
-        if ipn_obj.receiver_email != settings.PAYPAL_EMAIL:
-            # Not a valid payment
-            return
+import os
+import sys
 
-        # ALSO: for the same reason, you need to check the amount
-        # received, `custom` etc. are all what you expect or what
-        # is allowed.
+class PayPalClient:
+    def __init__(self):
+        self.client_id = os.getenv("PAYPAL_SANDBOX_CLIENT_ID")
+        self.client_secret = os.getenv("PAYPAL_SANDBOX_CLIENT_SECRET")
 
-        # Undertake some action depending upon `ipn_obj`.
-        if ipn_obj.custom == "premium_plan":
-            pass
+        """Set up and return PayPal Python SDK environment with PayPal access credentials.
+           This sample uses SandboxEnvironment. In production, use ProductionEnvironment."""
+
+        self.environment = SandboxEnvironment(client_id=self.client_id, client_secret=self.client_secret)
+
+        """ Returns PayPal HTTP client instance with environment that has access
+            credentials context. Use this instance to invoke PayPal APIs, provided the
+            credentials have access. """
+        self.client = PayPalHttpClient(self.environment)
+
+    def object_to_json(self, json_data):
+        """
+        Function to print all json data in an organized readable manner
+        """
+        result = {}
+        if sys.version_info[0] < 3:
+            itr = json_data.__dict__.iteritems()
         else:
-            pass
+            itr = json_data.__dict__.items()
+        for key,value in itr:
+            # Skip internal attributes.
+            if key.startswith("__"):
+                continue
+            result[key] = self.array_to_json_array(value) if isinstance(value, list) else\
+                        self.object_to_json(value) if not self.is_primittive(value) else\
+                         value
+        return result;
+    def array_to_json_array(self, json_array):
+        result =[]
+        if isinstance(json_array, list):
+            for item in json_array:
+                result.append(self.object_to_json(item) if  not self.is_primittive(item) \
+                              else self.array_to_json_array(item) if isinstance(item, list) else item)
+        return result;
 
-        if ipn_obj.mc_gross == price and ipn_obj.mc_currency == 'USD':
-            pass
-    else:
-        pass
-
-valid_ipn_received.connect(show_me_the_money)
+    def is_primittive(self, data):
+        return isinstance(data, str) or isinstance(data, unicode) or isinstance(data, int)

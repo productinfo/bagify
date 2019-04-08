@@ -1,56 +1,160 @@
 {% extends 'bagify/base.html' %}
 
 {% block head %}
+<script
+  src="https://www.paypal.com/sdk/js?client-id=AX9Vh-8q5tlsUheP8JdnN9avSvHcDmo1rXBCAyndEVLIK6yML65atI2c65NdV-0nMkLu_3CaTlSL5sns">
+</script>
 {% endblock %}
 
 {% block content %}
-<!-- Horizontal Steppers -->
-<div class="row">
-  <div class="col-md-12">
+<main class="container checkout">
+    <!-- Horizontal Steppers -->
+    <div class="row">
+      <div class="col-md-12">
 
-    <!-- Stepers Wrapper -->
-    <ul class="stepper stepper-horizontal">
+        <!-- Stepers Wrapper -->
+        <ul class="stepper stepper-horizontal">
 
-      <!-- First Step -->
-      <li class="">
-        <a href="{% url 'cart' %}">
-          <span class="circle bg-success"><i class="fas fa-check"></i></span>
-          <span class="label">Cart</span>
-        </a>
-      </li>
+          <!-- First Step -->
+          <li class="">
+            <a href="{% url 'cart' %}">
+              <span class="circle bg-success"><i class="fas fa-check"></i></span>
+              <span class="label">Cart</span>
+            </a>
+          </li>
 
-      <!-- Second Step -->
-      <li class="active">
-        <a href="#!">
-          <span class="circle"><i class="fas fa-exclamation"></i></span>
-          <span class="label">Delivery Information</span>
-        </a>
-      </li>
+          <!-- Second Step -->
+          <li class="active">
+            <a href="#!">
+              <span class="circle"><i class="fas fa-exclamation"></i></span>
+              <span class="label">Delivery Information</span>
+            </a>
+          </li>
 
-      <!-- Third Step -->
-      <li class="">
-        <a href="#!">
-          <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
-          <span class="label">Payment</span>
-        </a>
-      </li>
+          <!-- Third Step -->
+          <li class="">
+            <a href="#!">
+              <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
+              <span class="label">Payment</span>
+            </a>
+          </li>
 
-    </ul>
-    <!-- /.Stepers Wrapper -->
+        </ul>
+        <!-- /.Stepers Wrapper -->
 
-  </div>
-</div>
-<!-- /.Horizontal Steppers -->
+      </div>
+    </div>
+    <!-- /.Horizontal Steppers -->
 
-<section class="address">
+    <!-- Content -->
+    <div class="row my-2">
+        <!-- CART DETAILS -->
+        <section class="col-12 col-12 col-md-5 col-lg-4 cart order-md-2 my-3">
+            <div class="row">
+                <div class="col-12 mb-2 text-center">
+                    <h4>Cart</h4>
+                </div>
+                {% for item in cart %}
+                <div class="col-6 my-1">
+                    <img class="img-fluid"src="{{item.image}}" alt="">
+                </div>
+                <div class="col-6">
+                    <h6 class="m-0">{{item.name}} <span class="small text-uppercase">({{item.color}})</span></h6>
+                </div>
+                {% endfor %}
+                <div class="col-12 mt-3 text-center">
+                    <h5 class="m-0">Total: <strong>${{total}}</strong></h5>
+                </div>
+            </div>
+        </section>
+        <!-- END CART DETAILS -->
 
-</section>
+        <section class="address col-12 col-md-7 col-lg-8 order-md-1 my-3">
+            <h4 class='text-uppercase text-center'>Shipping information</h4>
+            <form class="" method="post">
+                {% csrf_token %}
 
-<section class="payment">
+                {% if request.user.is_anonymous %}
+                <div class="md-form">
+                  <input type="text" id="firstname" class="form-control">
+                  <label for="fistname">FIRST NAME</label>
+                  <input type="text" id="lastname" class="form-control">
+                  <label for="lastname">LAST NAME</label>
+                </div>
+                {% endif %}
 
-</section>
+            <div class="row">
+                {% for field in addressForm %}
+                {% if field.label == 'Country'%}
+                    <div class="col-6">
+                        <label for="{{field.auto_id}}" class=" text-muted">{{field.label}}:</label>
+                        {{field}}
+                    </div>
+                {% else %}
+                <div class="md-form col-6">
+                    {{field}}
+                    <label for="{{field.auto_id}}" class="pl-3">{{field.label}}</label>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="md-form col-6">
+                  <input type="tel" id="number" class="form-control">
+                  <label for="number" class="pl-3">Contact Number</label>
+                </div>
 
-    {{paypal.render}}
+            </div>
+            <div class="">
+                <button type="submit" class="btn btn-success float-right m-0" name="button">Proceed</button>
+                <button type="submit" class="btn btn-info float-right m-0 mr-2" name="button">Save Address</button>
+            </div>
+        </form>
 
-yep pal
+
+        </section>
+
+
+        <section class="payment col-12 col-md-7 col-lg-8 order-md-5 my-3">
+            <div class="text-center">
+                <h3>Payment Info</h3>
+                <div id="paypal-button-container"></div>
+            </div>
+        </section>
+
+
+    </div>
+
+    <!-- END CONTENT -->
+</main>
+<script>
+
+  paypal.Buttons({
+  createOrder: function(data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          value: '{{total}}'
+        }
+      }]
+    });
+  },
+  onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details) {
+      console.log(details, data);
+      console.log('Transaction completed by ' + details.payer.name.given_name);
+
+      return fetch('/paypal-transaction-complete', {
+        method: 'post',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          orderID: data.orderID
+        })
+      });
+    });
+  }
+}).render('#paypal-button-container');
+</script>
+
+
 {% endblock %}

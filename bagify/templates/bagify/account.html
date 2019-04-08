@@ -17,17 +17,18 @@
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
             <div class="row my-3">
-                <div class="col-12 col-lg-6">
-                    <h2 class="text-center">Account Details:</h2>
+                <div class="col-12">
+                    <h2>Account Details:</h2>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-10 offset-2 my-3">
                     <p>Name: {{user.first_name}} {{user.last_name}}</p>
                     <p>Email: {{user.email}}</p>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row">
                 <div class="col-lg-6">
                   <h4 class="text-center">Latest Orders:</h4>
+                  <hr class="mt-1">
                   <div class="list-group-flush list-group">
                     {% for order in user.orders.all|dictsort:"date"|slice:"5" %}
 
@@ -35,14 +36,21 @@
                       <a class="btn-floating btn-sm"><i class="far fa-eye"></i></a>
                       {{order}}
                     </li>
+                    {% empty %}
+                    <li class="list-group">No orders.</li>
                     {% endfor %}
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <h4 class="text-center">Home address:</h4>
                   <hr class="mt-1">
-                  {%for address in user.addresses.all%} {%if address.default%}
-                  {{address}} {% endif%} {%endfor%}
+                  {%for address in user.addresses.all%}
+                    {%if address.default%}
+                    {{address}}
+                  {% endif%}
+                  {% empty %}
+                  <p>No saved address</p>
+                  {%endfor%}
                 </div>
             </div>
         </div>

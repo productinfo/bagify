@@ -1,14 +1,17 @@
 {% extends 'bagify/base.html' %}
 
 {% block content %}
-<h3>Login</h3>
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" id="submit">Submit</button>
-</form>
+<main class="container text-center">
+    <h3 class="my-3">Login</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+    </form>
 
-<p>Don't have an account? <a href="/register">Register.</a></p>
+    <p>Don't have an account? <a href="/register">Register.</a></p>
 
-<p>Forgot your password? <a href="/register">You are screwed.</a></p>
+    <p><a href="/password/reset">Forgot your password?</a></p>
+</main>
+
 {% endblock %}

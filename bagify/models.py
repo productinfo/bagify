@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+
+from django_countries.fields import CountryField
+
 import json
 # Create your models here.
 
@@ -55,8 +58,11 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10)
+
     items = models.TextField()
+
     address = models.TextField()
+    customer_number = models.CharField(max_length=20, null=True)
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
     def __str__(self):
@@ -66,9 +72,12 @@ class Order(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
     default = models.BooleanField(default=False)
+
     state = models.CharField(blank=True, max_length=100)
-    address = models.CharField(blank=True, max_length=100)
-    complement = models.CharField(blank=True, max_length=100)
+    city = models.CharField(max_length=100)
+    country = CountryField()
+    address = models.CharField(max_length=100)
+    complement = models.CharField(blank=True, null=True, max_length=100)
     zip = models.CharField(blank=True, max_length=100)
 
     @staticmethod

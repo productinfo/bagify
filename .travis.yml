@@ -4,6 +4,9 @@ python:
 
 addons:
   firefox: "60.0.1"
+  sauce_connect:
+    username: "schapke"
+    access_key: "8e2fbfef-01ac-4bd3-a7d9-e083eb0e4bbf"
 
 before_install:
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz

@@ -11,7 +11,5 @@ urlpatterns = [
 	path('cart/', views.cart, name='cart'),
 	path('checkout/', views.checkout, name='checkout'),
 
-	path('paypal/', include('paypal.standard.ipn.urls')),
-	path('payment_done', TemplateView.as_view(template_name='alert/payment_done.html'), name='payment_done'),
-	path('payment_cancelled', TemplateView.as_view(template_name='alert/payment_cancelled.html'), name='payment_cancelled'),
+	path('paypal-transaction-complete', views.paypal_transaction_complete, name='paypal_complete')
 	]

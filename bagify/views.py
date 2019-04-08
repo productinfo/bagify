@@ -4,11 +4,14 @@ from django.http import HttpResponse, JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.cache import cache
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
-from .utils import getCart, give_me_money_paypal
+from .utils import getCart, GetOrder, getTotal
 from .models import *
 
-from paypal.standard.forms import PayPalPaymentsForm
+from .forms import AddressForm
+
+
 # Create your views here.
 
 
@@ -51,28 +54,20 @@ def cart(request):
 	return render(request, 'bagify/cart.html', { 'cart': cart })
 
 def checkout(request):
-	cart = getCart(request)
+	if request.method == 'POST':
+		pass
+	else:
+		cart = getCart(request)
+		total = getTotal(request)
+		addressForm = AddressForm()
 
-	paypal = give_me_money_paypal(request, "10.00","a bag ", "cool bags")
-	print(paypal)
-	return render(request, 'bagify/checkout.html', { 'cart': cart, "paypal": paypal })
+		return render(request, 'bagify/checkout.html', { 'cart': cart, 'addressForm': addressForm, 'total': total})
 
+@csrf_exempt
+def paypal_transaction_complete(request):
+	if request.method == 'POST':
+		order = json.loads(request.body)
+		total = getTotal(request)
 
-
-def view_that_asks_for_money(request, price, name, unique_id):
-
-    # What you want the button to do.
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": price,
-        "item_name": name,
-        "invoice": unique_id,
-        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-        "return": request.build_absolute_uri(reverse('payment_done')),
-        "cancel_return": request.build_absolute_uri(reverse('payment_cancelled')),
-    }
-
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form}
-    return render(request, "payment.html", context)
+		GetOrder().get_order(order['orderID'], total)
+	return HttpResponse(request, 'Hooray')

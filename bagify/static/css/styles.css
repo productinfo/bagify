@@ -78,4 +78,15 @@
   align-items: center;
 }
 
+.checkout .cart .row {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  padding: 15px 5px;
+}
+.checkout .cart img {
+  object-fit: cover;
+  width: 100%;
+  height: 50px;
+}
+
 /*# sourceMappingURL=styles.css.map */

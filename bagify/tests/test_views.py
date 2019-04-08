@@ -1,12 +1,16 @@
-from django.test import TestCase, Client, SimpleTestCase, LiveServerTestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 import os
 import random
+
+from django.test import TestCase, Client, SimpleTestCase, LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.webdriver import WebDriver
+
+
 
 # Create your tests here.
 
@@ -33,7 +37,6 @@ class PagesUpTestCase(unittest.TestCase):
 class AccountTestCase(StaticLiveServerTestCase):
     def setUp(self):
         super(AccountTestCase, self).setUp()
-        # self.selenium = webdriver.Firefox()
         self.selenium = WebDriver()
 
     def tearDown(self):
@@ -43,9 +46,6 @@ class AccountTestCase(StaticLiveServerTestCase):
     def test_register_new_user(self):
         selenium = self.selenium;
         selenium.get('%s%s' % (self.live_server_url, '/register/'))
-
-        # first_name = selenium.find_element_by_id('id_first_name')
-        # last_name = selenium.find_element_by_id('id_last_name')
 
         user = 'user' + str(random.randint(1,10000))
 
@@ -57,8 +57,6 @@ class AccountTestCase(StaticLiveServerTestCase):
         submit = selenium.find_element_by_id('register-button')
 
         #Fill the form with data
-        # first_name.send_keys('Jobalda')
-        # last_name.send_keys('Unary')
         username.send_keys(user)
         email.send_keys(os.getenv('TESTING_EMAIL'))
         password1.send_keys('P4$$W0RD6k')
