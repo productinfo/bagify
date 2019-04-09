@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    # 'paypal.standard.ipn',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',

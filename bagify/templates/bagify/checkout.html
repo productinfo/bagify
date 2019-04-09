@@ -1,9 +1,10 @@
 {% extends 'bagify/base.html' %}
-
+{% load static %}
 {% block head %}
 <script
   src="https://www.paypal.com/sdk/js?client-id=AX9Vh-8q5tlsUheP8JdnN9avSvHcDmo1rXBCAyndEVLIK6yML65atI2c65NdV-0nMkLu_3CaTlSL5sns">
 </script>
+<script src="{% static 'js/cookies.js'%}" charset="utf-8"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,15 +25,15 @@
           </li>
 
           <!-- Second Step -->
-          <li class="active">
+          <li class="active address-step">
             <a href="#!">
-              <span class="circle"><i class="fas fa-exclamation"></i></span>
+              <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
               <span class="label">Delivery Information</span>
             </a>
           </li>
 
           <!-- Third Step -->
-          <li class="">
+          <li class="payment-step">
             <a href="#!">
               <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
               <span class="label">Payment</span>
@@ -71,19 +72,19 @@
 
         <section class="address col-12 col-md-7 col-lg-8 order-md-1 my-3">
             <h4 class='text-uppercase text-center'>Shipping information</h4>
-            <form class="" method="post">
+            <form class="js-addressForm" method="post">
                 {% csrf_token %}
 
-                {% if request.user.is_anonymous %}
-                <div class="md-form">
-                  <input type="text" id="firstname" class="form-control">
-                  <label for="fistname">FIRST NAME</label>
-                  <input type="text" id="lastname" class="form-control">
-                  <label for="lastname">LAST NAME</label>
-                </div>
-                {% endif %}
 
             <div class="row">
+                {% if request.user.is_anonymous %}
+                <div class="md-form col-12">
+                  <input type="text" name='fullname' id="fullname" class="form-control" required>
+                  <label for="fullname" class="pl-3">Full Name</label>
+                 </div>
+
+                {% endif %}
+
                 {% for field in addressForm %}
                 {% if field.label == 'Country'%}
                     <div class="col-6">
@@ -97,15 +98,11 @@
                 </div>
                 {% endif %}
                 {% endfor %}
-                <div class="md-form col-6">
-                  <input type="tel" id="number" class="form-control">
-                  <label for="number" class="pl-3">Contact Number</label>
-                </div>
-
+                <input type="text" hidden name="save-address" value="false">
             </div>
-            <div class="">
-                <button type="submit" class="btn btn-success float-right m-0" name="button">Proceed</button>
-                <button type="submit" class="btn btn-info float-right m-0 mr-2" name="button">Save Address</button>
+            <div>
+                <button type="submit" class="btn btn-success float-right m-0 js-proceed" name="button">Proceed</button>
+                <button type="submit" class="btn btn-info float-right m-0 mr-2 js-save" name="button">Save Address and Prooced</button>
             </div>
         </form>
 
@@ -113,7 +110,7 @@
         </section>
 
 
-        <section class="payment col-12 col-md-7 col-lg-8 order-md-5 my-3">
+        <section class="payment col-12 col-md-7 col-lg-8 order-md-1 my-3" hidden>
             <div class="text-center">
                 <h3>Payment Info</h3>
                 <div id="paypal-button-container"></div>
@@ -122,39 +119,36 @@
 
 
     </div>
+<script src="{% static 'js/checkout.js' %}" charset="utf-8"></script>
+ <script type="text/javascript">
+             paypal.Buttons({
+             createOrder: function(data, actions) {
+               return actions.order.create({
+                 purchase_units: [{
+                   amount: {
+                     value: '{{total}}'
+                   }
+                 }]
+               });
+             },
+             onApprove: function(data, actions) {
+               return actions.order.capture().then(function(details) {
+                 console.log('Transaction completed by ' + details.payer.name.given_name);
 
-    <!-- END CONTENT -->
+                 return fetch('/paypal-transaction-complete', {
+                   method: 'post',
+                   headers: {
+                     'content-type': 'application/json'
+                   },
+                   body: JSON.stringify({
+                     orderID: data.orderID,
+                     modelID: modelID
+                   })
+                 });
+               });
+             }
+           }).render('#paypal-button-container');
+ </script>
 </main>
-<script>
-
-  paypal.Buttons({
-  createOrder: function(data, actions) {
-    return actions.order.create({
-      purchase_units: [{
-        amount: {
-          value: '{{total}}'
-        }
-      }]
-    });
-  },
-  onApprove: function(data, actions) {
-    return actions.order.capture().then(function(details) {
-      console.log(details, data);
-      console.log('Transaction completed by ' + details.payer.name.given_name);
-
-      return fetch('/paypal-transaction-complete', {
-        method: 'post',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          orderID: data.orderID
-        })
-      });
-    });
-  }
-}).render('#paypal-button-container');
-</script>
-
 
 {% endblock %}

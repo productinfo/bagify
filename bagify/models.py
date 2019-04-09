@@ -55,14 +55,15 @@ class Category(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100)
+
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10)
 
     items = models.TextField()
 
     address = models.TextField()
-    customer_number = models.CharField(max_length=20, null=True)
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
     def __str__(self):
@@ -73,12 +74,12 @@ class Address(models.Model):
     user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
     default = models.BooleanField(default=False)
 
-    state = models.CharField(blank=True, max_length=100)
+    state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     country = CountryField()
     address = models.CharField(max_length=100)
     complement = models.CharField(blank=True, null=True, max_length=100)
-    zip = models.CharField(blank=True, max_length=100)
+    zip = models.CharField(max_length=100)
 
     @staticmethod
     def get_default(self, user):

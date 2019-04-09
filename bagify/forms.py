@@ -11,9 +11,7 @@ class AddressForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AddressForm, self).__init__(*args, **kwargs)
-        # self.fields['description'].widget = TextInput(attrs={
-        #     'class': 'form-control'
-        #     })
+
         for field in iter(self.fields):
             classes = self.fields[field].widget.attrs.get("class")
             classes = " form-control"
