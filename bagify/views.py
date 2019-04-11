@@ -92,6 +92,7 @@ def checkout(request):
 def paypal_transaction_complete(request):
 	if request.method == 'POST':
 		response = json.loads(request.body)
+
 		answer = GetOrder().get_order(response['orderID'], response['addressDetails'], request)
 		print(answer)
 		if(answer == 0):
@@ -101,5 +102,5 @@ def paypal_transaction_complete(request):
 
 def order(request, id):
 	orderDetails = getOrderDetails(id, request)
-	print(orderDetails)
+
 	return JsonResponse(orderDetails)

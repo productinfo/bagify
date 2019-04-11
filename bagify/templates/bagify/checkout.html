@@ -90,12 +90,10 @@
         <h6 class="mb-0"><strong>Provide an address:</strong></h6>
         {% csrf_token %}
         <div class="row">
-          {% if request.user.is_anonymous %}
           <div class="md-form col-12">
             <input type="text" name="fullname" id="fullname" class="form-control" required />
             <label for="fullname" class="pl-3">Full Name</label>
           </div>
-          {% endif %}
           <div class="row">
               {% for field in addressForm %}
                 {% if field.label == 'Country' %}
@@ -117,9 +115,11 @@
           <button type="submit" class="btn btn-success float-right m-0 js-proceed" name="button">
             Proceed
           </button>
+          {% if request.user.is_authenticated %}
           <button type="submit" class="btn btn-info float-right m-0 mr-2 js-save" name="button" >
             Save Address and Prooced
           </button>
+          {% endif %}
         </div>
       </form>
     </section>
@@ -154,7 +154,6 @@
             console.log(
               "Transaction completed by " + details.payer.name.given_name
             );
-
             return fetch("/paypal-transaction-complete", {
                 method: "post",
                 headers: {

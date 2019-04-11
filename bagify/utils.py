@@ -78,17 +78,19 @@ class GetOrder(PayPalClient):
 	def get_order(self, order_id, addressDetails, request):
 		"""Method to get order"""
 
+		addressDetails = json.loads(addressDetails)
+
 		if request.user.is_anonymous:
 			user = None
-			name = addressDetails['fullname']
+
 		else:
 			user = request.user
-			name = ' '.join([user.first_name, user.last_name])
 
+		name = addressDetails['fullname']
 
 		total = getTotal(request)
 		cart = request.COOKIES.get('cart')
-		address = getAddress(json.loads(addressDetails), request)
+		address = getAddress(addressDetails, request)
 
 		print(address, cart, total)
 
@@ -108,7 +110,7 @@ class GetOrder(PayPalClient):
 
 		print(float(total) == float(response.result.purchase_units[0].amount.value))
 
-		if not address or not cart or not total or not name or not user:
+		if not address or not cart or not total or not name:
 			return 5
 
 		if response.status_code != 200:
