@@ -67,7 +67,7 @@ class Order(models.Model):
     total = models.DecimalField(decimal_places=2, max_digits=9)
 
     def __str__(self):
-        return f'({self.user}) - Status: {self.status}'
+        return f'Order n.{self.pk} - {self.date.strftime("%d/%m/%y")}'
 
 
 class Address(models.Model):
@@ -86,6 +86,8 @@ class Address(models.Model):
         address = user.addresses.filter(default=True)[0]
         return address
 
+    def __str__(self):
+        return f'Address of {self.user}'
 
 class Item(models.Model):
     GENDER_OPTIONS = (

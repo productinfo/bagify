@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .utils import getCart, GetOrder, getTotal
+from .utils import getCart, GetOrder, getTotal, getOrderDetails, addAddress
 from .models import *
 
 from .forms import AddressForm
@@ -27,8 +27,27 @@ def home(request):
 
 #Account Page
 def account(request):
-
-	return render(request, 'bagify/account.html')
+	if request.method == 'POST':
+		response = json.loads(request.body)
+		if response['type'] == 'address':
+			if response['action'] == 'remove':
+				address = Address.objects.get(pk=response['id'])
+				if(address.user == request.user):
+					address.delete()
+				else:
+					return JsonResponse({'success': False})
+			elif response['action'] == 'add':
+				response['save-address'] = 'true'
+				address = addAddress(response, request)
+				return JsonResponse({'success': True, 'id': address['id']})
+		elif response['type'] == 'change_password':
+			if request.user.check_password(response['current_pas']):
+				print('yep')
+		elif response['type'] == 'delete_account':
+			pass
+		return JsonResponse({'success': True})
+	addressForm = AddressForm()
+	return render(request, 'bagify/account.html', {'addressForm': addressForm})
 
 #Categories page
 def collections(request, query = ''):
@@ -55,51 +74,22 @@ def cart(request):
 
 def checkout(request):
 	total = getTotal(request)
-
-	if request.method == 'POST':
-		cookies = request.COOKIES.get('cart')
-		cart = json.loads(cookies)
-
-		response = json.loads(request.body)
-
-		if request.user.is_anonymous:
-			name = response.get('fullname')
-			print(response.get('fullname'))
-			user = None
-		else:
-			user = request.user
-			name = ' '.join([user.firstname, user.lastname])
-
-		if True:
-			address = {
-				'country': response.get('country'),
-				'state': response.get('state'),
-				'city': response.get('city'),
-				'address': response.get('address'),
-				'complement': response.get('complement'),
-				'zip': response.get('zip'),
-			}
-
-			if response.get('save-address') == 'true' and not request.user.is_anonymous:
-				model = Address(**address, user=request.user)
-				model.save()
-
-			text_address = ' - '.join(address.values())
-
-		order = Order(address=text_address, status='Payment Pending', total=total, name=name, user=user, items=cart)
-		order.save()
-
-		return JsonResponse({'success': True, 'order-id': order.pk})
-
-	else:
-		addressForm = AddressForm()
-		cart = getCart(request)
-		return render(request, 'bagify/checkout.html', { 'cart': cart, 'addressForm': addressForm, 'total': total})
+	addressForm = AddressForm()
+	cart = getCart(request)
+	return render(request, 'bagify/checkout.html', { 'cart': cart, 'addressForm': addressForm, 'total': total})
 
 @csrf_exempt
 def paypal_transaction_complete(request):
 	if request.method == 'POST':
-		order = json.loads(request.body)
-		print(order)
-		# GetOrder().get_order(order['orderID'])
-	return HttpResponse(request, 'Hooray we got the money')
+		response = json.loads(request.body)
+		answer = GetOrder().get_order(response['orderID'], response['addressDetails'], request)
+
+		if(answer == 0):
+			return JsonResponse({'success':True})
+
+	return render(request, 'bagify/transaction_completed.html')
+
+def order(request, id):
+	orderDetails = getOrderDetails(id)
+	print(orderDetails)
+	return JsonResponse(orderDetails)

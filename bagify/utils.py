@@ -2,6 +2,7 @@ import json
 
 from django.conf import settings
 from django.urls import reverse
+from django.core import serializers
 
 from .hooks import PayPalClient
 from .models import *
@@ -74,13 +75,27 @@ class GetOrder(PayPalClient):
 
 #2. Set up your server to receive a call from the client
 	"""You can use this function to retrieve an order by passing order ID as an argument"""
-	def get_order(self, order_id, real_total):
+	def get_order(self, order_id, addressDetails, request):
 		"""Method to get order"""
+
+		if request.user.is_anonymous:
+			user = None
+			name = addressDetails['fullname']
+		else:
+			user = request.user
+			name = ' '.join([user.first_name, user.last_name])
+
+
+		total = getTotal(request)
+		cart = request.COOKIES.get('cart')
+		address = getAddress(json.loads(addressDetails), request)
+
+		print(address, cart, total)
+
 		request = OrdersGetRequest(order_id)
 		#3. Call PayPal to get the transaction
 		response = self.client.execute(request)
 		#4. Save the transaction in your database. Implement logic to save transaction to your database for future reference.
-
 
 		print('Status Code: ', response)
 		print('Status: ', response.result)
@@ -91,15 +106,74 @@ class GetOrder(PayPalClient):
 			print('\t{}: {}\tCall Type: {}'.format(link.rel, link.href, link.method))
 		print('Gross Amount: {} {}'.format(response.result.purchase_units[0].amount.currency_code, response.result.purchase_units[0].amount.value))
 
+		print(float(total) == float(response.result.purchase_units[0].amount.value))
+
+		if not address or not cart or not total or not name or not user:
+			return 5
+
 		if response.status_code != 200:
 			return 4
 
-		if response.result.purchase_units[0].amount.value != real_total:
+		if float(total) != float(response.result.purchase_units[0].amount.value):
 			return 1
 
-		if response.result.id != 'COMPLETED':
-			return 2
 
 		if response.result.purchase_units[0].amount.currency_code != 'USD':
 			return 3
+
+		order = Order(address=address, status='Order Confirmed', total=total, name=name, user=user, items=cart)
+		order.save()
+
 		return 0
+
+def getAddress(addressDetails, request):
+
+	if addressDetails['select']:
+		id = addressDetails['addressId']
+		address_values = Address.objects.filter(pk=id).values()[0]
+		text_address = json.dumps(address_values)
+
+	else:
+		address = addAddress(addressDetails, request)
+
+		text_address = json.dumps(address['address_dict'])
+
+	return text_address
+
+def addAddress(addressDetails, request):
+	address = {
+		'country': addressDetails['country'],
+		'state': addressDetails['state'],
+		'city': addressDetails['city'],
+		'address': addressDetails['address'],
+		'complement': addressDetails['complement'],
+		'zip': addressDetails['zip'],
+	}
+
+	if addressDetails['save-address'] == 'true' and not request.user.is_anonymous:
+		model = Address(**address, user=request.user)
+		model.save()
+		return { 'address_dict' : address, 'id': model.pk}
+
+	return {'address_dict': address}
+
+def getOrderDetails(id):
+	order = Order.objects.filter(pk=id).values()[0]
+	orderData = {
+		'id': order['id'],
+		'status': order['status'],
+		'total': float(order['total']),
+		'date': str(order['date'].strftime("%A %d. %B %Y")),
+		'items': []
+	}
+
+	for item in json.loads(order['items']):
+		model = Item.objects.get(pk=item['id'])
+		data = {
+			'color': item['color'],
+			'name': model.name,
+			'price': float(model.price),
+		}
+		orderData['items'].append(data)
+
+	return orderData

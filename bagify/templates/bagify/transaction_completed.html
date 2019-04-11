@@ -1,0 +1,14 @@
+{% extends 'bagify/base.html' %}
+
+{% block title %}Bagify - Transaction Completed{% endblock%}
+
+{% block content %}
+    <div class="p-5">
+        <div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">Transaction Completed!</h4>
+    <p>Transaction was completed, for current details and statsu of the order check your orders at <a href="{% url 'account' %}" class="alert-link">your account page.</a></p>
+    <hr>
+    <p class="mb-0">Hope you enjoyed pretending to make a order with us.</p>
+    </div>
+    </div>
+{% endblock %}

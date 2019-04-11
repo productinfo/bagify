@@ -1,154 +1,178 @@
-{% extends 'bagify/base.html' %}
-{% load static %}
-{% block head %}
-<script
-  src="https://www.paypal.com/sdk/js?client-id=AX9Vh-8q5tlsUheP8JdnN9avSvHcDmo1rXBCAyndEVLIK6yML65atI2c65NdV-0nMkLu_3CaTlSL5sns">
-</script>
+{% extends 'bagify/base.html' %} {% load static %} {% block head %}
+<script src="https://www.paypal.com/sdk/js?client-id=AX9Vh-8q5tlsUheP8JdnN9avSvHcDmo1rXBCAyndEVLIK6yML65atI2c65NdV-0nMkLu_3CaTlSL5sns"></script>
 <script src="{% static 'js/cookies.js'%}" charset="utf-8"></script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <main class="container checkout">
-    <!-- Horizontal Steppers -->
-    <div class="row">
-      <div class="col-md-12">
+  <!-- Horizontal Steppers -->
+  <div class="row">
+    <div class="col-md-12">
+      <!-- Stepers Wrapper -->
+      <ul class="stepper stepper-horizontal">
+        <!-- First Step -->
+        <li class="">
+          <a href="{% url 'cart' %}">
+            <span class="circle bg-success"><i class="fas fa-check"></i></span>
+            <span class="label">Cart</span>
+          </a>
+        </li>
 
-        <!-- Stepers Wrapper -->
-        <ul class="stepper stepper-horizontal">
+        <!-- Second Step -->
+        <li class="active address-step">
+          <a href="#!">
+            <span class="circle bg-primary"
+              ><i class="fas fa-exclamation"></i
+            ></span>
+            <span class="label">Delivery Information</span>
+          </a>
+        </li>
 
-          <!-- First Step -->
-          <li class="">
-            <a href="{% url 'cart' %}">
-              <span class="circle bg-success"><i class="fas fa-check"></i></span>
-              <span class="label">Cart</span>
-            </a>
-          </li>
+        <!-- Third Step -->
+        <li class="payment-step">
+          <a href="#!">
+            <span class="circle bg-primary"
+              ><i class="fas fa-exclamation"></i
+            ></span>
+            <span class="label">Payment</span>
+          </a>
+        </li>
+      </ul>
+      <!-- /.Stepers Wrapper -->
+    </div>
+  </div>
+  <!-- /.Horizontal Steppers -->
 
-          <!-- Second Step -->
-          <li class="active address-step">
-            <a href="#!">
-              <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
-              <span class="label">Delivery Information</span>
-            </a>
-          </li>
-
-          <!-- Third Step -->
-          <li class="payment-step">
-            <a href="#!">
-              <span class="circle bg-primary"><i class="fas fa-exclamation"></i></span>
-              <span class="label">Payment</span>
-            </a>
-          </li>
-
-        </ul>
-        <!-- /.Stepers Wrapper -->
-
+  <!-- Content -->
+  <div class="row my-2">
+    <!-- CART DETAILS -->
+    <section class="col-12 col-12 col-md-5 col-lg-4 cart order-md-2 my-3">
+      <div class="row">
+        <div class="col-12 mb-2 text-center"><h4>Cart</h4></div>
+        {% for item in cart %}
+        <div class="col-6 my-1">
+          <img class="img-fluid" src="{{item.image}}" alt="" />
+        </div>
+        <div class="col-6">
+          <h6 class="m-0">
+            {{item.name}}
+            <span class="small text-uppercase">({{item.color}})</span>
+          </h6>
+        </div>
+        {% endfor %}
+        <div class="col-12 mt-3 text-center">
+          <h5 class="m-0">Total: <strong>${{total}}</strong></h5>
+        </div>
       </div>
-    </div>
-    <!-- /.Horizontal Steppers -->
+    </section>
+    <!-- END CART DETAILS -->
 
-    <!-- Content -->
-    <div class="row my-2">
-        <!-- CART DETAILS -->
-        <section class="col-12 col-12 col-md-5 col-lg-4 cart order-md-2 my-3">
-            <div class="row">
-                <div class="col-12 mb-2 text-center">
-                    <h4>Cart</h4>
-                </div>
-                {% for item in cart %}
-                <div class="col-6 my-1">
-                    <img class="img-fluid"src="{{item.image}}" alt="">
-                </div>
-                <div class="col-6">
-                    <h6 class="m-0">{{item.name}} <span class="small text-uppercase">({{item.color}})</span></h6>
-                </div>
-                {% endfor %}
-                <div class="col-12 mt-3 text-center">
-                    <h5 class="m-0">Total: <strong>${{total}}</strong></h5>
-                </div>
-            </div>
-        </section>
-        <!-- END CART DETAILS -->
+    <section class="address col-12 col-md-7 col-lg-8 order-md-1 my-3">
+      <h4 class="text-uppercase text-center">Shipping information</h4>
+      {% if request.user.addresses.all %}
+      <div class="select-address my-3 list-group">
+          <h6><strong>Select from saved addresses:</strong></h6>
+          {% for address in request.user.addresses.all %}
+          <label class="m-0">
+              <input type="radio" name="address-select" value="{{address.id}}" hidden>
+              <div class="list-group-item">
+                  <p class="m-0">{{address.address}}, {{address.complement}}</p>
+                  <p class="m-0">{{address.city}}, {{address.state}}, {{address.country}}.</p>
+              </div>
+          </label>
+          {% endfor%}
+          <div class="">
+              <button type="button" class='btn btn-success float-right select-button' name="button">Prooced</button>
+          </div>
+      </div>
+      {% endif %}
 
-        <section class="address col-12 col-md-7 col-lg-8 order-md-1 my-3">
-            <h4 class='text-uppercase text-center'>Shipping information</h4>
-            <form class="js-addressForm" method="post">
-                {% csrf_token %}
-
-
-            <div class="row">
-                {% if request.user.is_anonymous %}
-                <div class="md-form col-12">
-                  <input type="text" name='fullname' id="fullname" class="form-control" required>
-                  <label for="fullname" class="pl-3">Full Name</label>
-                 </div>
-
-                {% endif %}
-
-                {% for field in addressForm %}
-                {% if field.label == 'Country'%}
+      <form class="js-addressForm mt-5" method="post">
+        <h6 class="mb-0"><strong>Provide an address:</strong></h6>
+        {% csrf_token %}
+        <div class="row">
+          {% if request.user.is_anonymous %}
+          <div class="md-form col-12">
+            <input type="text" name="fullname" id="fullname" class="form-control" required />
+            <label for="fullname" class="pl-3">Full Name</label>
+          </div>
+          {% endif %}
+          <div class="row">
+              {% for field in addressForm %}
+                {% if field.label == 'Country' %}
                     <div class="col-6">
-                        <label for="{{field.auto_id}}" class=" text-muted">{{field.label}}:</label>
-                        {{field}}
-                    </div>
-                {% else %}
-                <div class="md-form col-6">
-                    {{field}}
-                    <label for="{{field.auto_id}}" class="pl-3">{{field.label}}</label>
-                </div>
-                {% endif %}
-                {% endfor %}
-                <input type="text" hidden name="save-address" value="false">
-            </div>
-            <div>
-                <button type="submit" class="btn btn-success float-right m-0 js-proceed" name="button">Proceed</button>
-                <button type="submit" class="btn btn-info float-right m-0 mr-2 js-save" name="button">Save Address and Prooced</button>
-            </div>
-        </form>
+                <label for="{{field.auto_id}}" class=" text-muted">{{field.label}}:</label>
+                {{field}}
+              </div>
+              {% else %}
+              <div class="md-form col-6">
+                {{field}}
+                <label for="{{field.auto_id}}" class="pl-3">{{field.label}}</label>
+              </div>
+              {% endif %} {% endfor %}
+          </div>
+
+          <input type="text" hidden name="save-address" value="false" />
+        </div>
+        <div>
+          <button type="submit" class="btn btn-success float-right m-0 js-proceed" name="button">
+            Proceed
+          </button>
+          <button type="submit" class="btn btn-info float-right m-0 mr-2 js-save" name="button" >
+            Save Address and Prooced
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="payment col-12 col-md-7 col-lg-8 order-md-1 my-3" hidden>
+      <div class="text-center">
+        <h3>Payment Info</h3>
+        <div id="paypal-button-container"></div>
+      </div>
+    </section>
+  </div>
 
 
-        </section>
+  <script type="text/javascript">
+      var addressDetails = null;
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [
+              {
+                amount: {
+                  value: "{{total}}"
+                }
+              }
+            ]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            console.log(
+              "Transaction completed by " + details.payer.name.given_name
+            );
 
-
-        <section class="payment col-12 col-md-7 col-lg-8 order-md-1 my-3" hidden>
-            <div class="text-center">
-                <h3>Payment Info</h3>
-                <div id="paypal-button-container"></div>
-            </div>
-        </section>
-
-
-    </div>
-<script src="{% static 'js/checkout.js' %}" charset="utf-8"></script>
- <script type="text/javascript">
-             paypal.Buttons({
-             createOrder: function(data, actions) {
-               return actions.order.create({
-                 purchase_units: [{
-                   amount: {
-                     value: '{{total}}'
-                   }
-                 }]
-               });
-             },
-             onApprove: function(data, actions) {
-               return actions.order.capture().then(function(details) {
-                 console.log('Transaction completed by ' + details.payer.name.given_name);
-
-                 return fetch('/paypal-transaction-complete', {
-                   method: 'post',
-                   headers: {
-                     'content-type': 'application/json'
-                   },
-                   body: JSON.stringify({
-                     orderID: data.orderID,
-                     modelID: modelID
-                   })
-                 });
-               });
-             }
-           }).render('#paypal-button-container');
- </script>
+            return fetch("/paypal-transaction-complete", {
+                method: "post",
+                headers: {
+                "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                orderID: data.orderID,
+                addressDetails: addressDetails
+                })
+            }).then(resp => resp.json())
+              .then(resp => {
+                  if(resp['success']){
+                      window.location.replace("{% url 'paypal_complete' %}");
+                  }
+              });
+          });
+        }
+      })
+      .render("#paypal-button-container");
+  </script>
+  <script src="{% static 'js/checkout.js' %}" charset="utf-8"></script>
 </main>
 
 {% endblock %}

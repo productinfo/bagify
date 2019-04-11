@@ -10,6 +10,7 @@ urlpatterns = [
 	path('account/', views.account, name='account'),
 	path('cart/', views.cart, name='cart'),
 	path('checkout/', views.checkout, name='checkout'),
+	path('order/<int:id>', views.order, name='order_details'),
 
 	path('paypal-transaction-complete', views.paypal_transaction_complete, name='paypal_complete')
 	]
