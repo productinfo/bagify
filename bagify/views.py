@@ -17,7 +17,7 @@ from .forms import AddressForm
 
 #Home page
 def home(request):
-	carousel = CarouselImage.objects.all()
+	carousel = CarouselImage.objects.filter(primary=True)
 	mostPopular = Color.objects.order_by('-sold_units')[:10]
 	newestAdditions = Color.objects.order_by('-id')[:10]
 	categories = Category.objects.all()
@@ -42,15 +42,25 @@ def account(request):
 				return JsonResponse({'success': True, 'id': address['id']})
 		elif response['type'] == 'change_password':
 			if request.user.check_password(response['current_pas']):
-				print('yep')
+				request.user.set_password(response['new_pas'])
+				request.user.save()
+				return JsonResponse({'success': True})
+			else:
+				return JsonResponse({'success': False})
 		elif response['type'] == 'delete_account':
-			pass
+			if request.user.check_password(response.get('pass')):
+				request.user.delete()
+				return JsonResponse({'success':True})
+			else:
+				return JsonResponse({'success': False})
+
 		return JsonResponse({'success': True})
 	addressForm = AddressForm()
 	return render(request, 'bagify/account.html', {'addressForm': addressForm})
 
 #Categories page
 def collections(request, query = ''):
+	carousel = CarouselImage.objects.filter(primary=False)
 
 	categories = Category.objects.all().values()
 
@@ -59,7 +69,7 @@ def collections(request, query = ''):
 
 	items = Item.objects.all()
 
-	return render(request, 'bagify/collections.html', {'categories': categories, 'query': query, 'items_json': items_json, 'items':items})
+	return render(request, 'bagify/collections.html', {'carousel': carousel, 'categories': categories, 'query': query, 'items_json': items_json, 'items':items})
 
 
 #Product page
@@ -83,13 +93,13 @@ def paypal_transaction_complete(request):
 	if request.method == 'POST':
 		response = json.loads(request.body)
 		answer = GetOrder().get_order(response['orderID'], response['addressDetails'], request)
-
+		print(answer)
 		if(answer == 0):
 			return JsonResponse({'success':True})
 
 	return render(request, 'bagify/transaction_completed.html')
 
 def order(request, id):
-	orderDetails = getOrderDetails(id)
+	orderDetails = getOrderDetails(id, request)
 	print(orderDetails)
 	return JsonResponse(orderDetails)

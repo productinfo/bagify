@@ -65,6 +65,7 @@
     </section>
     <!-- END CART DETAILS -->
 
+    <!-- ADDRESS -->
     <section class="address col-12 col-md-7 col-lg-8 order-md-1 my-3">
       <h4 class="text-uppercase text-center">Shipping information</h4>
       {% if request.user.addresses.all %}
@@ -122,10 +123,12 @@
         </div>
       </form>
     </section>
+    <!-- END OF ADDRESS -->
 
     <section class="payment col-12 col-md-7 col-lg-8 order-md-1 my-3" hidden>
-      <div class="text-center">
+      <div class="text-center my-4">
         <h3>Payment Info</h3>
+        <h6 class="text-left mt-5 text-muted">Finish your purchase through paypal:</h6>
         <div id="paypal-button-container"></div>
       </div>
     </section>
@@ -164,6 +167,7 @@
             }).then(resp => resp.json())
               .then(resp => {
                   if(resp['success']){
+                      document.cookie = `cart= ; path=/`;
                       window.location.replace("{% url 'paypal_complete' %}");
                   }
               });

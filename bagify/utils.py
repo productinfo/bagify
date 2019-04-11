@@ -128,12 +128,13 @@ class GetOrder(PayPalClient):
 
 def getAddress(addressDetails, request):
 
-	if addressDetails['select']:
+	if 'select' in addressDetails and addressDetails['select']:
 		id = addressDetails['addressId']
 		address_values = Address.objects.filter(pk=id).values()[0]
 		text_address = json.dumps(address_values)
 
 	else:
+		print(addressDetails)
 		address = addAddress(addressDetails, request)
 
 		text_address = json.dumps(address['address_dict'])
@@ -149,25 +150,32 @@ def addAddress(addressDetails, request):
 		'complement': addressDetails['complement'],
 		'zip': addressDetails['zip'],
 	}
-
-	if addressDetails['save-address'] == 'true' and not request.user.is_anonymous:
+	if 'save-address' in addressDetails and addressDetails['save-address'] == 'true' and request.user.is_authenticated:
 		model = Address(**address, user=request.user)
 		model.save()
 		return { 'address_dict' : address, 'id': model.pk}
 
 	return {'address_dict': address}
 
-def getOrderDetails(id):
-	order = Order.objects.filter(pk=id).values()[0]
+def getOrderDetails(id, request):
+	order = Order.objects.get(pk=id)
+	if order.user != request.user:
+		return ''
+
+
 	orderData = {
-		'id': order['id'],
-		'status': order['status'],
-		'total': float(order['total']),
-		'date': str(order['date'].strftime("%A %d. %B %Y")),
+		'id': order.id,
+		'status': order.status,
+		'total': float(order.total),
+		'date': str(order.date.strftime("%A %d. %B %Y")),
 		'items': []
+
 	}
 
-	for item in json.loads(order['items']):
+	address = json.loads(order.address)
+	orderData['address'] = ', '.join([address['address'], address['complement'], address['zip']])
+
+	for item in json.loads(order.items):
 		model = Item.objects.get(pk=item['id'])
 		data = {
 			'color': item['color'],

@@ -13,8 +13,8 @@
     <div>
         <h6><strong>Status:</strong> {{status}}</h6>
         <p><strong>Date:</strong> {{date}}</p>
+        <p><strong>Address:</strong> {{address}}</p>
         <h6><strong>Items:</strong></h6>
-
         {{#each items }}
             <div class="ml-3">
                 <p class='mb-0'>{{this.name}}</p>
@@ -28,6 +28,22 @@
 {% endblock %}
 
 {% block content %}
+<!-- TOASTER -->
+<div class="toasty" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" hidden>
+        <div class="wrapper top-right" id="notification-3">
+            <div class="row-class">
+                <div class="title-panel">
+                    <p class="title"></p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-12 col-md-12 col-lg-12 body">
+                </p>
+            </div>
+        </div>
+    </div>
+<!-- END OF TOASTER -->
+
 <main class="container">
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -69,7 +85,7 @@
                     <h2>Account Details:</h2>
                 </div>
                 <div class="col-10 offset-2 my-3">
-                    <p>Name: {{user.first_name}} {{user.last_name}}</p>
+                    {% if request.user.get_name %}<p>Name: {{request.user.get_name}}</p>{% endif %}
                     <p>Email: {{user.email}}</p>
                 </div>
             </div>
@@ -78,7 +94,7 @@
                   <h4 class="text-center">Latest Orders:</h4>
                   <hr class="mt-1">
                   <div class="list-group-flush list-group">
-                    {% for order in user.orders.all|dictsort:"date"|slice:"5" %}
+                    {% for order in user.orders.all|dictsortreversed:'pk'|slice:"5" %}
 
                     <li class="list-group-item" data-order="{{order.pk}}">
 
@@ -97,14 +113,14 @@
         <div class="tab-pane fade my-2" id="list-orders" role="tabpanel" aria-labelledby="list-orders-list">
           <h2>My orders</h2>
           <ul class="list-group js-orders">
-              {% for order in request.user.orders.all %}
+              {% for order in request.user.orders.all|dictsortreversed:'pk' %}
               <li class="list-group-item" data-order="{{order.pk}}">
 
                 <p class="d-inline-block">{{order}}</p>
                 <a class="btn-floating float-right btn-sm"><i class="far fa-eye"></i></a>
               </li>
             {% empty %}
-            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">No orders</li>
             {% endfor %}
           </ul>
 
@@ -158,19 +174,19 @@
                     <h4>Change password</h4>
                     <div class="col-12">
                         <div class="md-form">
-                          <input required type="text" id="old-password" name='current_pas' class="form-control">
+                          <input required type="password" id="old-password" name='current_pas' class="form-control" autocomplete="off">
                           <label for="old-password">Current password</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="md-form">
-                          <input type="text" name="new_pas" required id="new-password" class="form-control">
+                          <input type="password" name="new_pas" required id="new-password" class="form-control" autocomplete="off">
                           <label for="new-password">New password</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="md-form">
-                          <input required type="text" id="confirm-password" name='confirm_pas' class="form-control">
+                          <input required type="password" id="confirm-password" name='confirm_pas' class="form-control" autocomplete="off">
                           <label for="confirm-password">Confirm password</label>
                         </div>
                     </div>
@@ -183,7 +199,7 @@
                 <h4>Delete account</h4>
                 <div class="md-form">
                   <i class="fas fa-lock prefix"></i>
-                  <input required type="password" id="inputValidationEx2" class="form-control validate">
+                  <input required type="password" id="password" class="form-control validate" autocomplete="off">
                   <label for="inputValidationEx2" data-error="wrong" data-success="right">Type your password</label>
                 </div>
                 <button type="submit" class="btn btn-danger float-right">Delete Account</button>

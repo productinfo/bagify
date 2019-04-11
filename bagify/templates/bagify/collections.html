@@ -17,6 +17,43 @@ Collections
 {% block content %}
 
 <header>
+    <!-- CAROUSEL -->
+    {% if carousel %}
+    <div id="secondary-carousel" class="carousel slide carousel-fade mb-4" data-ride="carousel">
+        <!--Slides-->
+        <div class="carousel-inner" role="listbox">
+            {% for item in carousel %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="view">
+                    {% if item.url %}<a href="{{item.url}}">{% endif %}
+                    <img class="d-block w-100" src="{{ item.image.url }}" alt="slide">
+                    <div class="mask rgba-black-light"></div>
+                    </a>
+                </div>
+                <div class="carousel-caption rgba-black-light">
+                    <h1 class="h3-responsive">{{ item.title }}</h1>
+                    {% if item.subtitle %}<p class="d-none d-sm-block mb-0">{{ item.subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!--/.Slides-->
+        <!--Controls-->
+        <a class="carousel-control-prev" href="#secondary-carousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#secondary-carousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        <!--/.Controls-->
+    </div>
+    {% endif %}
+    <!-- END OF CAROUSEL -->
+    <div class="title-header">
+        <h1 class="text-center text-uppercase"><strong>Our Collections</strong></h1>
+    </div>
     <!-- FILTERS  -->
     <div class="container py-2 my-2">
         <!-- CATEGORIES -->
@@ -42,11 +79,11 @@ Collections
             </div>
 
             <div class="col-12 p-0 col-sm-4">
-                <div class="d-inline-block ml-3 text-center">
+                <div class="d-inline-block ml-3">
                     <label class="filter-checkbox mx-2">
                       <input type="checkbox" name="gender" value="F" autocomplete="off" hidden>
                       <div>
-                          <i class="fas fa-2x fa-venus"></i>
+                          <i class="fas fa-2x fa-venus mr-2"></i>
                           <h3 class="d-inline-block m-0"> Women</h3>
                       </div>
                     </label>
@@ -54,7 +91,7 @@ Collections
                     <label class="filter-checkbox">
                       <input type="checkbox" name="gender" value="M" autocomplete="off" hidden>
                       <div>
-                          <i class="fas fa-2x fa-mars"></i>
+                          <i class="fas fa-2x fa-mars mr-2"></i>
                           <h3 class="d-inline-block m-0"> Men</h3>
                       </div>
                     </label>

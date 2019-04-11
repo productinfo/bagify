@@ -25,15 +25,17 @@ function product() {
 
 
     function showImage() {
-        const src = document.querySelector(`input[name=${data.selected_color}]:checked`).value;
+        const src = document.querySelector(`input[name="${data.selected_color}"]:checked`).value;
         view.display.src = src;
     }
 
     function showFrames() {
         const value = document.querySelector(`input[name="colors"]:checked`).value;
         data.selected_color = value;
+        console.log(value);
 
         for(row of view.frame_rows) {
+            console.log(row.dataset.color);
             row.hidden = (row.dataset.color === value) ? false : true;
         }
     }

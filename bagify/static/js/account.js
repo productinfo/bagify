@@ -10,7 +10,17 @@ function account() {
 
             document.querySelector('.modal-body').innerHTML = html;
             $('.modal').modal('show')
-        }
+        },
+
+        sendToaster(options) {
+            const toaster = document.querySelector('.toasty');
+            document.querySelector('.toasty .title').innerHTML = options.title;
+            document.querySelector('.toasty .body').innerHTML = options.body;
+            toaster.querySelector('div').classList.add(options.color);
+
+            toaster.hidden = false;
+            setTimeout(() => toaster.hidden=true, 2000);
+        },
     }
 
 
@@ -44,7 +54,9 @@ function account() {
             id,
         }
 
-        const callback = () => evt.target.closest('li').remove();
+        const callback = rsp => {
+            if(rsp['success']) evt.target.closest('li').remove();
+        }
 
         sendPost(JSON.stringify(body), callback);
     }
@@ -61,14 +73,17 @@ function account() {
         }
 
         const callback = rsp => {
-            const li = `<li class="list-group-item" >
-                        ${body['address']} ${body['complement']}
-                        <button type="button" class="float-right btn btn-sm btn-danger" data-id="${rsp['id']}" name="button">Remove</button>
-                        </li>`
+            if(rsp['success']) {
+                const li = `<li class="list-group-item" >
+                            ${body['address']} ${body['complement']}
+                            <button type="button" class="float-right btn btn-sm btn-danger" data-id="${rsp['id']}" name="button">Remove</button>
+                            </li>`
 
-            document.querySelector('.js-addresses').insertAdjacentHTML('beforeend', li);
+                document.querySelector('.js-addresses').insertAdjacentHTML('beforeend', li);
 
-            document.querySelector('.no_saved').remove();
+                document.querySelector('.no_saved').remove();
+            }
+
         }
         sendPost(JSON.stringify(body), callback)
     }
@@ -85,11 +100,7 @@ function account() {
             credentials: 'same-origin',
             body: body
         }).then(rsp => rsp.json())
-        .then(rsp => {
-            if(rsp['success']) {
-                callback(rsp);
-            }
-        });
+        .then(rsp => callback(rsp));
     }
 
     function resetPassword(evt) {
@@ -97,13 +108,25 @@ function account() {
         const body = {
             type: 'change_password'
         }
+
         evt.target.querySelectorAll('input').forEach(input => {
             body[input.name] = input.value;
+            input.value = '';
         })
 
-        console.log(body);
+        if(body.new_pas !== body.confirm_pas) {
+            view.sendToaster({color:'danger', body:'Passwords do not match.', title:'Operation Failed'})
+            return;
+        }
 
-        callback = () => {};
+        callback = rsp => {
+            if(rsp['success']){
+                view.sendToaster({color:'success', title:'Success', body:'Password changed.'})
+            } else {
+                view.sendToaster({title:'Operation Failed', body:'Wrong password', color:'danger'})
+            }
+
+        };
 
         sendPost(JSON.stringify(body), callback);
     }
@@ -116,7 +139,13 @@ function account() {
             pass: pass,
         }
 
-        callback = () => window.location.replace('/');
+        callback = rsp => {
+            if(rsp['success']) {
+                window.location.replace('/')
+            } else {
+                view.sendToaster({color:'danger', title:'Operation Failed.', body:'Wrong password.'})
+            }
+        };
 
         sendPost(JSON.stringify(body), callback);
         }

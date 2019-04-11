@@ -3,10 +3,13 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" id="register-button">Submit</button>
-</form>
+<main class='container my-4 clearfix'>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class=" float-right btn btn-primary" id="register-button">Submit</button>
+    </form>
+</main>
+
 
 {% endblock %}

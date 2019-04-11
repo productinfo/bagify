@@ -36,7 +36,7 @@
                 <div class="col-3">
                     {% for color in product.colors.all %}
 
-                    <div class="row frame_row" hidden data-color={{color.label}}>
+                    <div class="row frame_row" hidden data-color="{{color.label}}">
                         {% for image in color.images.all %}
                             <div class="col-12">
                                 <label class="view overlay">
