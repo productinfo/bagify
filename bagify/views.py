@@ -22,7 +22,6 @@ def home(request):
 	newestAdditions = Color.objects.order_by('-id')[:10]
 	categories = Category.objects.all()
 
-
 	return render(request, 'bagify/index.html', {'carousel': carousel, 'newest': newestAdditions, 'popular': mostPopular, 'categories': categories })
 
 
