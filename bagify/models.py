@@ -12,9 +12,11 @@ class CarouselImage(models.Model):
     image = models.ImageField(upload_to="carousel_images/")
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=300, null=True, blank=True)
-    item = models.ForeignKey('Item', related_name='carousel', on_delete=models.CASCADE, null=True, blank=True)
+
+    item = models.ForeignKey('Item', related_name='carousel_item', on_delete=models.SET_NULL, null=True, blank=True)
+
+    main = models.BooleanField(default=True)
     url = models.TextField(null=True, blank=True)
-    primary = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.title}'

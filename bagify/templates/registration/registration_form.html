@@ -4,10 +4,11 @@
 
 {% block content %}
 <main class='container my-4 clearfix'>
+    <h1>Register</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class=" float-right btn btn-primary" id="register-button">Submit</button>
+        <button type="submit" class=" btn btn-primary" id="register-button">Submit</button>
     </form>
 </main>
 

@@ -17,10 +17,11 @@ from .forms import AddressForm
 
 #Home page
 def home(request):
-	carousel = CarouselImage.objects.filter(primary=True)
+	carousel = CarouselImage.objects.filter(main=True)
 	mostPopular = Color.objects.order_by('-sold_units')[:10]
 	newestAdditions = Color.objects.order_by('-id')[:10]
 	categories = Category.objects.all()
+
 
 	return render(request, 'bagify/index.html', {'carousel': carousel, 'newest': newestAdditions, 'popular': mostPopular, 'categories': categories })
 
@@ -60,7 +61,7 @@ def account(request):
 
 #Categories page
 def collections(request, query = ''):
-	carousel = CarouselImage.objects.filter(primary=False)
+	carousel = CarouselImage.objects.filter(main=False)
 
 	categories = Category.objects.all().values()
 

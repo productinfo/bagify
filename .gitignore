@@ -3,6 +3,6 @@ db.sqlite3
 geckodriver.log
 images
 finalProject/settings.py
-bagify/__pycache__
+bagify/__pycache__/*
 bagify/migration/0*
 bagify/migration/__pycache__/0*
