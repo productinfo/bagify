@@ -32,7 +32,7 @@ DEBUG = True
 SECRET_KEY = os.getenv('DJANGO_SECRET')
 
 ALLOWED_HOSTS = [
-    'schapke.herokuapp',
+    'schapke-project.herokuapp.com',
     'localhost',
     '127.0.0.1']
 
@@ -112,7 +112,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
