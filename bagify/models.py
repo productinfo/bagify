@@ -13,7 +13,7 @@ class CarouselImage(models.Model):
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=300, null=True, blank=True)
     item = models.ForeignKey('Item', related_name='carousel', on_delete=models.CASCADE, null=True, blank=True)
-    url = models.CharField(max_length=800, null=True, blank=True)
+    url = models.TextField(null=True, blank=True)
     primary = models.BooleanField(default=True)
 
     def __str__(self):
