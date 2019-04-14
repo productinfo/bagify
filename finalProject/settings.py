@@ -42,6 +42,24 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'bagify-images'
+AWS_S3_REGION_NAME = 'us-west-2'
+AWS_S3_ENDPOINT_URL = 'https://s3.us-west-2.amazonaws.com'
+
+S3DIRECT_DESTINATIONS = {
+    'product': {
+        'key': 'products',
+    },
+    'category': {
+        'key': 'categories'
+    },
+    'carousel': {
+        'key': 'carousel',
+    },
+
+}
 
 ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_AUTO_LOGIN = True
@@ -53,6 +71,7 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 # Application definition
 
+
 INSTALLED_APPS = [
     'bagify',
     'django.contrib.auth',
@@ -63,6 +82,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',
+    's3direct',
 ]
 
 MIDDLEWARE = [

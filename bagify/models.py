@@ -2,14 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
-
 from django_countries.fields import CountryField
 
+from s3direct.fields import S3DirectField
 import json
 # Create your models here.
 
 class CarouselImage(models.Model):
-    image = models.ImageField(upload_to="carousel_images/")
+    image = S3DirectField(dest='carousel')
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=300, null=True, blank=True)
 
@@ -26,7 +26,7 @@ class Image(models.Model):
     item = models.ForeignKey('Item', related_name="images", on_delete=models.CASCADE)
     color = models.ForeignKey('Color', related_name='images', on_delete=models.CASCADE, null=True)
 
-    image = models.ImageField(upload_to="products_images/")
+    image = S3DirectField(dest='product')
     main_display = models.BooleanField(default=False)
 
     def __str__(self):
@@ -51,7 +51,7 @@ class Color(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="categories_images/")
+    image = S3DirectField(dest='category')
 
     def __str__(self):
         return f'{self.name}'

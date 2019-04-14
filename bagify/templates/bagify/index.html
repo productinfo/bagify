@@ -20,7 +20,7 @@
         <div class="carousel-item {% if forloop.first %}active{% endif %}">
             <div class="view">
                 <a href="{{item.url}}">
-                <img class="d-block w-100" src="{{ item.image.url }}" alt="slide">
+                <img class="d-block w-100" src="{{ item.image }}" alt="slide">
                 <div class="mask rgba-black-light"></div>
                 </a>
             </div>
@@ -65,7 +65,7 @@
             <div class="card-naked">
           <!--Featured image-->
           <div class="view overlay hm-white-slight rounded">
-              <img src="{{object.get_main_image.image.url}}" class="hoverable img-fluid card-image" data-id="">
+              <img src="{{object.get_main_image.image}}" class="hoverable img-fluid card-image" data-id="">
               <a href ="{% url 'product' object.item.id %}">
                   <div class="mask rgba-grey-light">
                       <div class="btn btn-lg btn-white">
@@ -90,7 +90,7 @@
         <div class="card-naked">
             <!--Featured image-->
             <div class="view overlay hm-white-slight rounded">
-          <img src="{{object.get_main_image.image.url}}" class="hoverable img-fluid card-image" data-id="">
+          <img src="{{object.get_main_image.image}}" class="hoverable img-fluid card-image" data-id="">
           <a href ="{% url 'product' object.item.id %}">
               <div class="mask rgba-grey-light"></div>
           </a>
@@ -133,9 +133,9 @@
     <div class="row justify-content-center"">
         {% for category in categories %}
         <div class="col-6 col-sm-5 p-0 view zoom">
-            <img class="img-fluid" src="{{ category.image.url }}" alt="image of the category">
+            <img class="img-fluid" src="{{ category.image }}" alt="image of the category">
             <a href="{% url 'collection' category.name %}"><div class="mask flex-center waves-effect waves-light rgba-black-light">
-                <h4 class="white-text">{{category.name}}</h4>
+                <h4 class="white-text text-uppercase">{{category.name}}</h4>
             </div></a>
         </div>
         {% endfor %}
