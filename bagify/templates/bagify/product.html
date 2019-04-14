@@ -40,9 +40,9 @@
                         {% for image in color.images.all %}
                             <div class="col-12">
                                 <label class="view overlay">
-                                    <input type="radio" name="{{color.label}}" value="{{ image.image.url }}"
+                                    <input type="radio" name="{{color.label}}" value="{{ image.image }}"
                                     {% if forloop.first %}checked{% endif %} hidden>
-                                    <img src="{{ image.image.url }}" class="w-100" alt="product image">
+                                    <img src="{{ image.image }}" class="w-100" alt="product image">
                                     <div class="mask waves-effect waves-light rgba-white-slight">
                                     </div>
                                 </label>

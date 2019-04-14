@@ -49,7 +49,7 @@ def getCart(request):
 
 		item['price'] = float(productModel.price)
 		item['name'] = productModel.name
-		item['image'] = productModel.colors.get(label__iexact=product['color']).get_main_image().image.url
+		item['image'] = productModel.colors.get(label__iexact=product['color']).get_main_image().image
 
 		bigCart.append(item)
 
@@ -86,7 +86,10 @@ class GetOrder(PayPalClient):
 		else:
 			user = request.user
 
-		name = addressDetails['fullname']
+		if 'fullname' in addressDetails:
+			name = addressDetails['fullname']
+		else:
+			name = request.user.get_full_name()
 
 		total = getTotal(request)
 		cart = request.COOKIES.get('cart')
@@ -110,7 +113,7 @@ class GetOrder(PayPalClient):
 
 		print(float(total) == float(response.result.purchase_units[0].amount.value))
 
-		if not address or not cart or not total or not name:
+		if not address or not cart or not total:
 			return 5
 
 		if response.status_code != 200:

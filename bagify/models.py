@@ -45,8 +45,11 @@ class Color(models.Model):
         return f'{self.label} color for {self.item}'
 
     def get_main_image(self):
-        query = Image.objects.filter(color=self, main_display=True)[0]
-        return query or None
+        query = Image.objects.filter(color=self, main_display=True)
+        if query:
+            return query[0]
+        else:
+            return None
 
 
 class Category(models.Model):
@@ -59,10 +62,10 @@ class Category(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=150, null=True)
 
     date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10)
+    status = models.CharField(max_length=30)
 
     items = models.TextField()
 

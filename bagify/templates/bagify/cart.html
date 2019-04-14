@@ -15,7 +15,8 @@
     {% for product in cart %}
     <div class="row cart-item my-3" data-id="{{product.id}}" data-color="{{product.color}}" data-price="{{product.price}}">
         <div class="col-12 col-sm-6">
-            <a href="{% url 'product' product.id %}" class="waves-effect waves-light"><img src="{{product.image}}" class="w-100" alt="image of product"></a>
+            <a href="{% url 'product' product.id %}" class="waves-effect waves-light">
+                <img src="{{product.image}}" class="w-100" alt="image of product"></a>
         </div>
         <div class="col-12 col-sm-6">
             <h4 class=" content_center">{{product.name}}</h4>

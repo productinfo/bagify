@@ -67,10 +67,12 @@ function account() {
             type:'address',
             action:'add',
         }
+
         const data = new FormData(evt.target)
         for([key, value] of data.entries()) {
             body[key] = value;
         }
+        evt.target.reset();
 
         const callback = rsp => {
             if(rsp['success']) {
